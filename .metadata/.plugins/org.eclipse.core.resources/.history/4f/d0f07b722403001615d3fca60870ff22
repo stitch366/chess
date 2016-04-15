@@ -1,0 +1,201 @@
+package application;
+
+import java.util.ArrayList;
+
+
+
+import javafx.animation.PathTransition;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
+import javafx.scene.shape.Path;
+import javafx.util.Duration;
+
+
+public class BoardController {
+	 	@FXML
+	    private AnchorPane root ;
+	 	
+	 	@FXML
+	 	private AnchorPane background;
+	 	
+	 	@FXML
+	 	private AnchorPane overlay;
+	 	
+	 	@FXML
+	 	private AnchorPane spaces;
+	 	
+	 	@FXML
+	 	private Region w1;
+	 	@FXML
+	 	private Region w2;
+	 	@FXML
+	 	private Region w3;
+	 	@FXML
+	 	private Region w4;
+	 	@FXML
+	 	private Region w5;
+	 	@FXML
+	 	private Region w6;
+	 	@FXML
+	 	private Region w7;
+	 	@FXML
+	 	private Region w8;
+	 	@FXML
+	 	private Region w9;
+	 	@FXML
+	 	private Region w10;
+	 	@FXML
+	 	private Region w11;
+	 	@FXML
+	 	private Region w12;
+	 	@FXML
+	 	private Region w13;
+	 	@FXML
+	 	private Region w14;
+	 	@FXML
+	 	private Region w15;
+	 	@FXML
+	 	private Region w16;
+	 	
+	 	@FXML
+	 	private Region b1;
+	 	@FXML
+	 	private Region b2;
+	 	@FXML
+	 	private Region b3;
+	 	@FXML
+	 	private Region b4;
+	 	@FXML
+	 	private Region b5;
+	 	@FXML
+	 	private Region b6;
+	 	@FXML
+	 	private Region b7;
+	 	@FXML
+	 	private Region b8;
+	 	@FXML
+	 	private Region b9;
+	 	@FXML
+	 	private Region b10;
+	 	@FXML
+	 	private Region b11;
+	 	@FXML
+	 	private Region b12;
+	 	@FXML
+	 	private Region b13;
+	 	@FXML
+	 	private Region b14;
+	 	@FXML
+	 	private Region b15;
+	 	@FXML
+	 	private Region b16;
+	 	
+	    private ChessUtil chess = new ChessUtil();
+	    
+	    private MoveInfo mov = new MoveInfo();
+
+	    @FXML
+	    private void peiceClick(MouseEvent event) {
+	        String id = ((Node) event.getSource()).getId();
+	        ArrayList<String> moves = chess.findPeiceMoves(id);
+	        if(moves.size() > 0)
+	        {
+	        	mov.setPeiceId(id);
+	        	mov.setOpts(moves);
+	        	for(int x = 0; x < moves.size(); x++)
+	        	{
+	        		if(chess.checkForPeice( moves.get(x)))
+	        		{
+	        			setMoveStyle(moves.get(x), 'c');
+	        		}
+	        		else
+	        		{
+	        			setMoveStyle(moves.get(x), 'm');
+	        		}
+	        	}
+	        	ToggleOverlayTransparency();
+	        	disablePeicesToggle(moves, false);
+	            System.out.println(moves);
+	        }
+	        System.out.println("Handling event " + event.getEventType()); 
+	        event.consume();
+	    }
+	    
+	    @FXML
+	    private void moveClick(MouseEvent event) {
+	        String id = ((Node) event.getSource()).getId();
+	        PathTransition pathTransition = new PathTransition();
+	        Path p = chess.getPath(mov.getPeiceId(), id);
+	        pathTransition.setDuration(Duration.millis(4000));
+	        pathTransition.setPath(p);
+	        pathTransition.setNode(root.lookup("#"+ mov.getPeiceId()));
+	        for(int x = 0; x < mov.getOpts().size(); x++)
+	        {
+	        	setMoveStyle(mov.getOpts().get(x), 'r');
+	        }
+        	disablePeicesToggle(mov.getOpts(), true);
+        	ToggleOverlayTransparency();
+        	pathTransition.play();
+	        System.out.println("Handling event " + event.getEventType()); 
+	        event.consume();
+	    }
+	    
+	    public void initialize() {
+	        disablePeicesToggle(chess.blackID, true);
+	        disablePeicesToggle(chess.spaceID, true);
+	        ToggleOverlayTransparency();
+	        System.out.println(chess.spaceID); 
+	    }
+	    public void ToggleOverlayTransparency()
+	    {
+	    	if(overlay.isMouseTransparent())
+	    	{
+	    		overlay.setMouseTransparent(false);
+	    	}
+	    	else
+	    	{
+	    		overlay.setMouseTransparent(true);
+	    	}
+	    }
+	    public void setMoveStyle(String id, char styleCode)
+	    {
+	    	Node location = root.lookup("#" + id);
+	    	switch(styleCode)
+	    	{
+		    	case 'm':
+		    		location.setStyle("-fx-background-color:rgba(255,255,0,.5);");
+		    		break;
+		    	case 'c':
+		    		location.setStyle("-fx-background-color:rgba(255,0,0,.5);");
+		    		break;
+		    	case 'r':
+		    	default:
+		    		location.setStyle("-fx-background-color:rgba(255,255,255,0);");
+	    			
+	    	}
+	    }
+	    public void disablePeicesToggle(String[] idSet, boolean disable)
+	    {
+	        Node peice;
+	        for(int x = 0; x < idSet.length ;x++)
+	        {
+	            peice = root.lookup("#" + idSet[x]);
+	            peice.setDisable(disable);
+	        }
+
+	    }
+	    public void disablePeicesToggle(ArrayList<String> idSet, boolean disable)
+	    {
+	        Node peice;
+	        for(int x = 0; x < idSet.size(); x++)
+	        {
+	            peice = root.lookup("#" + idSet.get(x));
+	            peice.setDisable(disable);
+	        }
+
+	    }
+}
+

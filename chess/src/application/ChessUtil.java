@@ -2,15 +2,31 @@ package application;
 
 import java.util.ArrayList;
 
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+
 public class ChessUtil {
 	public String[] whiteID = new String[16];
 	public String[] blackID = new String[16];
+	public String[] spaceID = new String[64];
 	public Peice[] white = new Peice[16];
 	public Peice[] black = new Peice[16];
 	public Board board;
 	
 	public ChessUtil()
 	{
+		for(int x = 0; x < 8; x ++)
+		{
+			this.spaceID[x] = "a-"+ (x+1);
+			this.spaceID[x + 8] = "b-"+ (x+1);
+			this.spaceID[x + 16] = "c-"+ (x+1);
+			this.spaceID[x + 24] = "d-"+ (x+1);
+			this.spaceID[x + 32] = "e-"+ (x+1);
+			this.spaceID[x + 40] = "f-"+ (x+1);
+			this.spaceID[x + 48] = "g-"+ (x+1);
+			this.spaceID[x + 56] = "h-"+ (x+1);
+		}
+		
 		for(int x = 0; x < 16; x++)
 		{
 			this.whiteID[x] ="w"+(x+1);
@@ -452,7 +468,7 @@ public class ChessUtil {
 		
 		return temp;
 	}
-	private boolean checkForPeice(String checkLocation)
+	public boolean checkForPeice(String checkLocation)
 	{
 		String pAtLocation = board.getSpacePiece(checkLocation);
 		if(pAtLocation != "")
@@ -463,6 +479,63 @@ public class ChessUtil {
 		{
 			return false;
 		}
+	}
+	public Peice getPeice(String id)
+	{
+		int peiceIndex = findPeiceIndex(id);
+		if(id.charAt(0) == 'b')
+		{
+			return this.black[peiceIndex];
+		}
+		else
+		{
+			return this.white[peiceIndex];
+		}
+	}
+	public Path getPath(String peiceId, String locationId)
+	{
+		Path path = new Path();
+		int index = findPeiceIndex(peiceId);
+		String current;
+		PeiceType t;
+		Movement m = new Movement();
+		if(peiceId.charAt(0) == 'b')
+		{
+			current = this.black[index].getLocation();
+			t = this.black[index].getType();
+		}
+		else
+		{
+			current = this.white[index].getLocation();
+			t = this.black[index].getType();
+		}
+		double pY = m.getPxLocation(current.split("-")[0]);
+		double lY = m.getPxLocation(locationId.split("-")[0]);
+		double lX = m.getPxLocation(locationId.split("-")[1]); 
+		if(t == PeiceType.KNIGHT)
+		{
+			path = MakePath(pY, lX, lY);
+		}
+		else
+		{
+			path = MakePath(lX, lY);
+		}
+		return path;
+	}
+	private Path MakePath(double x, double y)
+	{
+		Path path = new Path();
+		path.getElements().add(new MoveTo(x, y));
+		
+		return path;
+	}
+	private Path MakePath(double py, double x, double y)
+	{
+		Path path = new Path();
+		path.getElements().add(new MoveTo(x, py));
+		path.getElements().add(new MoveTo(x, y));
+		
+		return path;
 	}
 	private int findPeiceIndex(String id)
 	{

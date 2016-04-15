@@ -1,0 +1,117 @@
+package application;
+
+import java.util.ArrayList;
+
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+
+
+public class BoardController {
+	 	@FXML
+	    private AnchorPane root ;
+	 	
+	 	@FXML
+	 	private AnchorPane background;
+	 	
+	 	@FXML
+	 	private AnchorPane overlay;
+	 	
+	 	@FXML
+	 	private AnchorPane spaces;
+	 	
+	    private ChessUtil chess = new ChessUtil();
+	    
+	    private MoveInfo mov = new MoveInfo();
+
+	    @FXML
+	    private void peiceClick(MouseEvent event) {
+	        String id = ((Node) event.getSource()).getId();
+	        ArrayList<String> moves = chess.findPeiceMoves(id);
+	        if(moves.size() > 0)
+	        {
+	        	mov.setPeiceId(id);
+	        	mov.setOpts(moves);
+	        	for(int x = 0; x < moves.size(); x++)
+	        	{
+	        		if(chess.checkForPeice( moves.get(x)))
+	        		{
+	        			setMoveStyle(moves.get(x), 'c');
+	        		}
+	        		else
+	        		{
+	        			setMoveStyle(moves.get(x), 'm');
+	        		}
+	        	}
+	        	ToggleOverlayTransparency();
+	        	disablePeicesToggle(moves, false);
+	            System.out.println(moves);
+	        }
+	        System.out.println("Handling event " + event.getEventType()); 
+	        event.consume();
+	    }
+	    
+	    @FXML
+	    private void moveClick(MouseEvent event) {
+	        String id = ((Node) event.getSource()).getId();
+	        System.out.println("Handling event " + event.getEventType()); 
+	        event.consume();
+	    }
+	    
+	    public void initialize() {
+	        disablePeicesToggle(chess.blackID, true);
+	        disablePeicesToggle(chess.spaceID, true);
+	        ToggleOverlayTransparency();
+	        System.out.println(chess.spaceID); 
+	    }
+	    public void ToggleOverlayTransparency()
+	    {
+	    	if(overlay.isMouseTransparent())
+	    	{
+	    		overlay.setMouseTransparent(false);
+	    	}
+	    	else
+	    	{
+	    		overlay.setMouseTransparent(true);
+	    	}
+	    }
+	    public void setMoveStyle(String id, char styleCode)
+	    {
+	    	Node location = root.lookup("#" + id);
+	    	switch(styleCode)
+	    	{
+		    	case 'm':
+		    		location.setStyle("-fx-background-color:rgba(255,255,0,.5);");
+		    		break;
+		    	case 'c':
+		    		location.setStyle("-fx-background-color:rgba(255,0,0,.5);");
+		    		break;
+		    	case 'r':
+		    	default:
+		    		location.setStyle("-fx-background-color:rgba(255,255,255,0);");
+	    			
+	    	}
+	    }
+	    public void disablePeicesToggle(String[] idSet, boolean disable)
+	    {
+	        Node peice;
+	        for(int x = 0; x < idSet.length ;x++)
+	        {
+	            peice = root.lookup("#" + idSet[x]);
+	            peice.setDisable(disable);
+	        }
+
+	    }
+	    public void disablePeicesToggle(ArrayList<String> idSet, boolean disable)
+	    {
+	        Node peice;
+	        for(int x = 0; x < idSet.size(); x++)
+	        {
+	            peice = root.lookup("#" + idSet.get(x));
+	            peice.setDisable(disable);
+	        }
+
+	    }
+}
+

@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="javafx.scene.Node"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.AnchorPane"/>
+<fullyQualifiedTypeName name="javafx.scene.shape.MoveTo"/>
+<fullyQualifiedTypeName name="javafx.animation.PathTransition"/>
+<fullyQualifiedTypeName name="javafx.scene.shape.Path"/>
+<fullyQualifiedTypeName name="javax.xml.datatype.Duration"/>
+<fullyQualifiedTypeName name="javafx.util.Duration"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.Region"/>
+<fullyQualifiedTypeName name="javafx.animation.Interpolator"/>
+<fullyQualifiedTypeName name="javafx.event.ActionEvent"/>
+<fullyQualifiedTypeName name="javafx.event.EventHandler"/>
+</qualifiedTypeNameHistroy>

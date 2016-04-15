@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="root" prefHeight="740.0" prefWidth="740.0" stylesheets="@application/application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.BoardController">
+   <children>
+      <AnchorPane id="chessboard" fx:id="background" layoutX="10.0" layoutY="10.0" prefHeight="720.0" prefWidth="720.0" stylesheets="@application/application.css" />
+   	  <AnchorPane id="board-spaces" fx:id="spaces" layoutX="50.0" layoutY="50.0" prefHeight="640.0" prefWidth="640.0">
+         <children>
+            <Region id="b7" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bRook" />
+            <Region id="b3" layoutX="160.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bBishop" />
+            <Region id="b5" layoutX="80.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bKnight" />
+            <Region id="b2" layoutX="240.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bQueen" />
+            <Region id="b1" layoutX="320.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bKing" />
+            <Region id="b4" layoutX="400.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bBishop" />
+            <Region id="b6" layoutX="480.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bKnight" />
+            <Region id="b8" layoutX="560.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bRook" />
+            <Region id="b12" layoutX="240.0" layoutY="80.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bPawn" />
+            <Region id="b10" layoutX="80.0" layoutY="80.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bPawn" />
+            <Region id="b13" layoutX="320.0" layoutY="80.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bPawn" />
+            <Region id="b16" layoutX="560.0" layoutY="80.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bPawn" />
+            <Region id="b9" layoutY="80.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bPawn" />
+            <Region id="b15" layoutX="480.0" layoutY="80.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bPawn" />
+            <Region id="b11" layoutX="160.0" layoutY="80.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bPawn" />
+            <Region id="b14" layoutX="400.0" layoutY="80.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bPawn" />
+            <Region id="w3" layoutX="160.0" layoutY="560.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wBishop" />
+            <Region id="w12" layoutX="240.0" layoutY="480.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wPawn" />
+            <Region id="w10" layoutX="80.0" layoutY="480.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wPawn" />
+            <Region id="w5" layoutX="80.0" layoutY="560.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wKnight" />
+            <Region id="w7" layoutY="560.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wRook" />
+            <Region id="w14" layoutX="400.0" layoutY="480.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wPawn" />
+            <Region id="w1" layoutX="320.0" layoutY="560.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wKing" />
+            <Region id="w2" layoutX="240.0" layoutY="560.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wQueen" />
+            <Region id="w6" layoutX="480.0" layoutY="560.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wKnight" />
+            <Region id="w13" layoutX="320.0" layoutY="480.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wPawn" />
+            <Region id="w16" layoutX="560.0" layoutY="480.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wPawn" />
+            <Region id="w9" layoutY="480.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wPawn" />
+            <Region id="w15" layoutX="480.0" layoutY="480.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wPawn" />
+            <Region id="w11" layoutX="160.0" layoutY="480.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wPawn" />
+            <Region id="w8" layoutX="560.0" layoutY="560.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wRook" />
+            <Region id="w4" layoutX="400.0" layoutY="560.0" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wBishop" />  
+         </children>
+      </AnchorPane>
+      <AnchorPane id="board-overlay" fx:id="overlay" layoutX="50.0" layoutY="50.0" prefHeight="640.0" prefWidth="640.0" />
+   </children>
+</AnchorPane>

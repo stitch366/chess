@@ -53,20 +53,6 @@ public class ChessUtil {
 		this.board = new Board(white, black);
 	}
 	
-	private void setBoard()
-	{
-		String id;
-		String location;
-		for(int x = 0; x< 16; x++)
-		{
-			id = white[x].getID();
-			location = white[x].getLocation();
-			this.board.setSpacePiece(location, id);
-			id = black[x].getID();
-			location = black[x].getLocation();
-			this.board.setSpacePiece(location, id);
-		}
-	}
 	public ArrayList<String> findPeiceMoves(String id)
 	{
 		int pIndex = findPeiceIndex(id);

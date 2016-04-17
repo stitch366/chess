@@ -158,7 +158,9 @@ public class BoardController {
 	        	}
 	        	ToggleOverlayTransparency();
 	        	disablePeicesToggle(moves, false);
+	            System.out.println(moves);
 	        }
+	        System.out.println("Handling event " + event.getEventType()); 
 	        event.consume();
 	    }
 	    
@@ -185,6 +187,7 @@ public class BoardController {
         	ToggleOverlayTransparency();
         	//ChangeTurn();
         	pathTransition.playFromStart();
+	        System.out.println("Handling event " + event.getEventType()); 
 	        event.consume();
 	    }
 	    
@@ -354,6 +357,8 @@ public class BoardController {
 		    		b16.setManaged(false);
 		    		break;  
 	    	}
+	    	
+	    	System.out.println(this.capturedPeices);
 	    	
 	    }
 	    public void ChangeTurn()
@@ -893,10 +898,12 @@ public class BoardController {
     		KingSide.setVisible(false);
     		QueenSide.setDisable(true);
     		QueenSide.setVisible(false);
+	    	System.out.println(KingIcon.getStyleClass().get(0));
 	        disablePeicesToggle(chess.blackID, true);
 	        disablePeicesToggle(chess.spaceID, true);
 	        ToggleOverlayTransparency();
-	        ToggleDialogDisplayTransparency(); 
+	        ToggleDialogDisplayTransparency();
+	        System.out.println(chess.spaceID); 
 	    }
 	    public void ToggleOverlayTransparency()
 	    {

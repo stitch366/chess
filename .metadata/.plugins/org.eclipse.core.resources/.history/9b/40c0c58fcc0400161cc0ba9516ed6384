@@ -8,7 +8,6 @@ public class CastleMove {
 	public String RookID;
 	public String moveRookTo;
 	public ArrayList<String> spacesToCheck = new ArrayList<String>();
-	public ArrayList<String> spacesMovedonByKing = new ArrayList<String>();
 	public CastleMove(String color, Castle c)
 	{
 		if(color == "White")
@@ -22,8 +21,6 @@ public class CastleMove {
 					this.moveRookTo = "h-6";
 					this.spacesToCheck.add("h-6");
 					this.spacesToCheck.add("h-7");
-					this.spacesMovedonByKing.add("h-6");
-					this.spacesMovedonByKing.add("h-7");
 					break;
 				case QUEEN_SIDE:
 					this.moveKingTo = "h-3";
@@ -32,8 +29,6 @@ public class CastleMove {
 					this.spacesToCheck.add("h-2");
 					this.spacesToCheck.add("h-3");
 					this.spacesToCheck.add("h-4");
-					this.spacesMovedonByKing.add("h-4");
-					this.spacesMovedonByKing.add("h-3");
 					break;
 				default:
 					break;
@@ -51,8 +46,6 @@ public class CastleMove {
 					this.moveRookTo = "a-6";
 					this.spacesToCheck.add("a-6");
 					this.spacesToCheck.add("a-7");
-					this.spacesMovedonByKing.add("h-6");
-					this.spacesMovedonByKing.add("h-7");
 					break;
 				case QUEEN_SIDE:
 					this.moveKingTo = "a-3";
@@ -61,8 +54,6 @@ public class CastleMove {
 					this.spacesToCheck.add("a-2");
 					this.spacesToCheck.add("a-3");
 					this.spacesToCheck.add("a-4");
-					this.spacesMovedonByKing.add("a-4");
-					this.spacesMovedonByKing.add("a-3");
 					break;
 				default:
 					break;
@@ -91,9 +82,5 @@ public class CastleMove {
 	public ArrayList<String> getSpacesToCheck()
 	{
 		return spacesToCheck;
-	}
-	public ArrayList<String> getSpacesKingToches()
-	{
-		return spacesMovedonByKing;
 	}
 }

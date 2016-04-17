@@ -141,8 +141,8 @@ public class ChessUtil {
 		Peice rook = getPeice(KingSide.getRookId());
 		boolean isRookCaptured = hasRookBeenCaptured(KingSide.getRookId());
 		boolean areSpacesEmpty = areSpacesEmpty(KingSide.getSpacesToCheck());
-		boolean areSpacesNotSafeForKing = areSpacesUnderAttack(KingSide.getSpacesKingToches(), king.getColor());
-		if((!areSpacesNotSafeForKing)&& (!rook.hasMoved) && (!king.hasMoved) && (!isRookCaptured) && areSpacesEmpty)
+		
+		if((!rook.hasMoved) && (!king.hasMoved) && (!isRookCaptured) && areSpacesEmpty)
 		{
 			return true;
 		}
@@ -151,26 +151,13 @@ public class ChessUtil {
 			return false;
 		}
 	}
-	private boolean areSpacesUnderAttack(ArrayList<String> spaces, PeiceColor p)
-	{
-		ArrayList<String> enemyMoves = GetPossEnemyMoves(p);
-		
-		for(int x =0; x < spaces.size(); x++)
-		{
-			if(enemyMoves.contains(spaces.get(x)))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 	public boolean canQueenSideCastle(){
 		Peice king = getPeice(QueenSide.getKingId());
 		Peice rook = getPeice(QueenSide.getRookId());
 		boolean isRookCaptured = hasRookBeenCaptured(QueenSide.getRookId());
 		boolean areSpacesEmpty = areSpacesEmpty(QueenSide.getSpacesToCheck());
-		boolean areSpacesNotSafeForKing = areSpacesUnderAttack(QueenSide.getSpacesKingToches(), king.getColor());
-		if((!areSpacesNotSafeForKing)&&(!rook.hasMoved) && (!king.hasMoved) && (!isRookCaptured) && areSpacesEmpty)
+		
+		if((!rook.hasMoved) && (!king.hasMoved) && (!isRookCaptured) && areSpacesEmpty)
 		{
 			return true;
 		}

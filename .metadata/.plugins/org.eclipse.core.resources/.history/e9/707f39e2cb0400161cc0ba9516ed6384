@@ -723,7 +723,7 @@ public class BoardController {
 	    }
 	    public void toggleKingSide()
 	    {
-	    	if(chess.canKingSideCastle() && KingSide.isDisabled() && (!chess.isInCheck(CurrentTurn)))
+	    	if(chess.canKingSideCastle() && KingSide.isDisabled())
 	    	{
 	    		KingSide.setDisable(false);
 	    		KingSide.setVisible(true);
@@ -736,7 +736,7 @@ public class BoardController {
 	    }
 	    public void toggleQueenSide()
 	    {
-	    	if(chess.canQueenSideCastle() && QueenSide.isDisabled() && (!chess.isInCheck(CurrentTurn)))
+	    	if(chess.canQueenSideCastle() && QueenSide.isDisabled())
 	    	{
 	    		QueenSide.setDisable(false);
 	    		QueenSide.setVisible(true);

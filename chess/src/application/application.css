@@ -51,3 +51,48 @@
 {
 	-fx-background-image:url('../chess-Img/bPawn.png');
 }
+.canMove
+{
+	-fx-background-color:rgba(255,255,0,.5);
+}
+.canCapture
+{
+	-fx-background-color:rgba(255,0,0,.5);
+}
+.selectedPeice
+{
+	-fx-background-color:radial-gradient(center 50% 50% , radius 100% , rgba(0,135,255,0), rgba(0,135,255,.2), rgba(0,135,255,.5));
+}
+.dialog
+{
+	-fx-background-color: rgb(255, 153, 51);
+}
+.dialogHead
+{
+	-fx-background-color:rgb(204, 102, 0);
+}
+.dialogButton
+{
+	-fx-background-color:rgb(204, 102, 0);
+}
+.dialogButton:hover
+{
+	-fx-background-color:rgb(179, 89, 0);
+}
+.turnHead
+{
+	-fx-background-color:rgb(204, 102, 0);
+}
+.panel
+{
+	-fx-background-color: rgb(255, 153, 51);
+}
+
+.button
+{
+	-fx-background-color:rgb(204, 102, 0);
+}
+.button:hover
+{
+	-fx-background-color:rgb(179, 89, 0);
+}

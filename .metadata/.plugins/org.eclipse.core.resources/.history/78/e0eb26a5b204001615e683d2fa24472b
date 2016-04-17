@@ -1,0 +1,48 @@
+package application;
+
+import java.util.ArrayList;
+
+public class CastleMove {
+	public String KingID;
+	public String moveKingTo;
+	public String RookID;
+	public String moveRookTo;
+	public ArrayList<String> spacesToCheck = new ArrayList<String>();
+	public CastleMove(String color, Castle c)
+	{
+		if(color == "White")
+		{
+			this.KingID = "w1";
+			switch(c)
+			{
+				case KING_SIDE:
+					this.moveKingTo = "h-7";
+					this.RookID = "w8";
+					this.moveRookTo = "h-6";
+					break;
+				case QUEEN_SIDE:
+					break;
+				default:
+					break;
+			
+			}
+		}
+		else
+		{
+			this.KingID = "b1";
+			switch(c)
+			{
+				case KING_SIDE:
+					this.moveKingTo = "a-7";
+					this.RookID = "b8";
+					this.moveRookTo = "a-6";
+					break;
+				case QUEEN_SIDE:
+					break;
+				default:
+					break;
+			
+			}
+		}
+	}
+}

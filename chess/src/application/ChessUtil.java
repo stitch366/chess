@@ -2,19 +2,23 @@ package application;
 
 import java.util.ArrayList;
 
+import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
 public class ChessUtil {
-	public String[] whiteID = new String[16];
-	public String[] blackID = new String[16];
+	public ArrayList<String> whiteID = new ArrayList<String>();
+	public ArrayList<String>  blackID = new ArrayList<String>();
 	public String[] spaceID = new String[64];
 	public Peice[] white = new Peice[16];
 	public Peice[] black = new Peice[16];
 	public Board board;
-	
+	public CastleMove KingSide;
+	public CastleMove QueenSide;
 	public ChessUtil()
 	{
+		this.KingSide = new CastleMove("White", Castle.KING_SIDE);
+		this.QueenSide = new CastleMove("White", Castle.QUEEN_SIDE);
 		for(int x = 0; x < 8; x ++)
 		{
 			this.spaceID[x] = "a-"+ (x+1);
@@ -29,8 +33,8 @@ public class ChessUtil {
 		
 		for(int x = 0; x < 16; x++)
 		{
-			this.whiteID[x] ="w"+(x+1);
-			this.blackID[x] ="b"+(x+1);
+			this.whiteID.add("w"+(x+1));
+			this.blackID.add("b"+(x+1));
 		}
 		this.white[0]= new Peice("w1", "h-5", PeiceColor.WHITE, PeiceType.KING, false);
 		this.white[1]= new Peice("w2", "h-4", PeiceColor.WHITE, PeiceType.QUEEN, false);
@@ -68,12 +72,38 @@ public class ChessUtil {
 		
 		this.board = new Board(white, black);
 	}
-	
+	public void removeCapturedPeice(String id)
+	{
+		if(id.charAt(0) == 'b')
+		{
+			this.blackID.remove(id);
+		}
+		else
+		{
+			this.whiteID.remove(id);
+		}
+	}
+	public boolean isMate(String color)
+	{
+		String KingID = (color == "White")? "w1" : "b1";
+		ArrayList<String> moves = findPeiceMoves(KingID);
+		if(moves.size() == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	public ArrayList<String> findPeiceMoves(String id)
 	{
 		int pIndex = findPeiceIndex(id);
 		Peice p = id.charAt(0) == 'w' ? white[pIndex] : black[pIndex];
 		ArrayList<String> moves = new ArrayList<String>();
+		String EnemyKingId = id.charAt(0) == 'w' ? "b1" : "w1";
+		Peice EnemyKing = getPeice(EnemyKingId);
+		ArrayList<String> EKmoves = new ArrayList<String>();
 		switch(p.getType())
 		{
 			case BISHOP:
@@ -84,6 +114,8 @@ public class ChessUtil {
 				break;
 			case KNIGHT:
 				moves = getKnightMoves(p);
+				EKmoves = getKnightMoves(EnemyKing);
+				moves.removeAll(EKmoves);
 				break;
 			case PAWN:
 				moves = getPawnMoves(p);
@@ -98,6 +130,110 @@ public class ChessUtil {
 				break;
 		}
 		return moves;
+	}
+	public void setCastleMoves(String color)
+	{
+		this.KingSide = new CastleMove(color, Castle.KING_SIDE);
+		this.QueenSide = new CastleMove(color, Castle.QUEEN_SIDE);
+	}
+	public boolean canKingSideCastle(){
+		Peice king = getPeice(KingSide.getKingId());
+		Peice rook = getPeice(KingSide.getRookId());
+		boolean isRookCaptured = hasRookBeenCaptured(KingSide.getRookId());
+		boolean areSpacesEmpty = areSpacesEmpty(KingSide.getSpacesToCheck());
+		
+		if((!rook.hasMoved) && (!king.hasMoved) && (!isRookCaptured) && areSpacesEmpty)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public boolean canQueenSideCastle(){
+		Peice king = getPeice(QueenSide.getKingId());
+		Peice rook = getPeice(QueenSide.getRookId());
+		boolean isRookCaptured = hasRookBeenCaptured(QueenSide.getRookId());
+		boolean areSpacesEmpty = areSpacesEmpty(QueenSide.getSpacesToCheck());
+		
+		if((!rook.hasMoved) && (!king.hasMoved) && (!isRookCaptured) && areSpacesEmpty)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public String getKingSideKID()
+	{
+		return this.KingSide.getKingId();
+	}
+	public String getKingSideRID()
+	{
+		return this.KingSide.getRookId();
+	}
+	public String getKingSideKMoveTo()
+	{
+		return this.KingSide.getSpaceToMoveKing();
+	}
+	public String getKingSideRMoveTo()
+	{
+		return this.KingSide.getSpaceToMoveRook();
+	}
+	public String getQueenSideKID()
+	{
+		return this.QueenSide.getKingId();
+	}
+	public String getQueenSideRID()
+	{
+		return this.QueenSide.getRookId();
+	}
+	public String getQueenSideKMoveTo()
+	{
+		return this.QueenSide.getSpaceToMoveKing();
+	}
+	public String getQueenSideRMoveTo()
+	{
+		return this.QueenSide.getSpaceToMoveRook();
+	}
+	public boolean areSpacesEmpty(ArrayList<String> spaces)
+	{
+		String spacePeice;
+		for(int x = 0; x < spaces.size(); x++)
+		{
+			spacePeice = getSpacePeice(spaces.get(x));
+			if(spacePeice != "")
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	public boolean hasRookBeenCaptured(String id)
+	{
+		if(id.charAt(0) == 'w')
+		{
+			for(int x = 0; x < whiteID.size(); x++)
+			{
+				if(whiteID.get(x).equals(id))
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			for(int x = 0; x < blackID.size(); x++)
+			{
+				if(blackID.get(x).equals(id))
+				{
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	private ArrayList<String> getQueenMoves(Peice p)
 	{
@@ -208,27 +344,27 @@ public class ChessUtil {
 			t = getMove(1, 1, p);
 			temp.add(t);
 		}
-		if(getMove(-1, -1, p) != "NA")
+		if(getMove(-1, 0, p) != "NA")
 		{
-			t = getMove(-1, -1, p);
+			t = getMove(-1, 0, p);
 			temp.add(t);
 		}
-		if(getMove(-1, 1, p) != "NA")
+		if(getMove(0, 1, p) != "NA")
 		{
-			t = getMove(-1, 1, p);
+			t = getMove(0, 1, p);
 			temp.add(t);
 		}
-		if(getMove(1, -1, p) != "NA")
+		if(getMove(0, -1, p) != "NA")
 		{
-			t = getMove(1, -1, p);
+			t = getMove(0, -1, p);
 			temp.add(t);
 		}
-		if(getMove(1, 1, p) != "NA")
+		if(getMove(1, 0, p) != "NA")
 		{
-			t = getMove(1, 1, p);
+			t = getMove(1, 0, p);
 			temp.add(t);
 		}
-		
+		temp.removeAll(GetPossEnemyMoves(p.getColor()));
 		return temp;
 	}
 	private ArrayList<String> getRookMoves(Peice p)
@@ -323,14 +459,14 @@ public class ChessUtil {
 					t = getMove(-1, 1, p);
 					temp.add(t);
 				}
-				if(getMove(-1, 0, p) != "NA")
+				if(getMove(-1, 0, p) != "NA" && (!checkForEnemy(p.getColor(), getMove(-1, 0, p))))
 				{
 					t = getMove(-1, 0, p);
 					temp.add(t);
 				}
 				if(!p.isHasMoved())
 				{
-					if(getMove(-2, 0, p) != "NA")
+					if(getMove(-2, 0, p) != "NA" && (!checkForEnemy(p.getColor(), getMove(-2, 0, p))))
 					{
 						t = getMove(-2, 0, p);
 						temp.add(t);
@@ -348,14 +484,14 @@ public class ChessUtil {
 					t = getMove(1, 1, p);
 					temp.add(t);
 				}
-				if(getMove(1, 0, p) != "NA")
+				if(getMove(1, 0, p) != "NA" && (!checkForEnemy(p.getColor(), getMove(1, 0, p)) ))
 				{
 					t = getMove(1, 0, p);
 					temp.add(t);
 				}
 				if(!p.isHasMoved())
 				{
-					if(getMove(2, 0, p) != "NA")
+					if(getMove(2, 0, p) != "NA" && (!checkForEnemy(p.getColor(), getMove(2, 0, p))))
 					{
 						t = getMove(2, 0, p);
 						temp.add(t);
@@ -468,6 +604,46 @@ public class ChessUtil {
 		
 		return temp;
 	}
+	public String getPeiceLocation(String pId)
+	{
+		int pIndex = findPeiceIndex(pId);
+		String loc;
+		if(pId.charAt(0) == 'b')
+		{
+			loc = this.black[pIndex].getLocation();
+		}
+		else
+		{
+			loc = this.white[pIndex].getLocation();
+		}
+		return loc;
+	}
+	public void setPeiceType(String pId, PeiceType t)
+	{
+		int pIndex = findPeiceIndex(pId);
+		if(pId.charAt(0) == 'b')
+		{
+			this.black[pIndex].setType(t);
+		}
+		else
+		{
+			this.white[pIndex].setType(t);
+		}
+	}
+	public PeiceType getPeiceType(String pId)
+	{
+		int pIndex = findPeiceIndex(pId);
+		PeiceType t;
+		if(pId.charAt(0) == 'b')
+		{
+			t = this.black[pIndex].getType();
+		}
+		else
+		{
+			t = this.white[pIndex].getType();
+		}
+		return t;
+	}
 	public boolean checkForPeice(String checkLocation)
 	{
 		String pAtLocation = board.getSpacePiece(checkLocation);
@@ -478,6 +654,45 @@ public class ChessUtil {
 		else
 		{
 			return false;
+		}
+	}
+	public String getSpacePeice(String Location)
+	{
+		return this.board.getSpacePiece(Location);
+	}
+	public void doMove(String pId, String newLocation)
+	{
+		int pIndex = findPeiceIndex(pId);
+		String cLocation;
+		boolean MovedBefore;
+		if(pId.charAt(0) == 'b')
+		{
+			cLocation = this.black[pIndex].getLocation();
+			MovedBefore = this.black[pIndex].isHasMoved();
+		}
+		else
+		{
+			cLocation = this.white[pIndex].getLocation();
+			MovedBefore = this.white[pIndex].isHasMoved();
+		}
+		
+		this.board.setSpacePiece(newLocation, pId);
+		this.board.setSpacePiece(cLocation, "");
+		if(pId.charAt(0) == 'b')
+		{
+			this.black[pIndex].setLocation(newLocation);
+			if(!MovedBefore)
+			{
+				this.black[pIndex].setHasMoved(true);
+			}
+		}
+		else
+		{
+			this.white[pIndex].setLocation(newLocation);
+			if(!MovedBefore)
+			{
+				this.white[pIndex].setHasMoved(true);
+			}
 		}
 	}
 	public Peice getPeice(String id)
@@ -492,6 +707,41 @@ public class ChessUtil {
 			return this.white[peiceIndex];
 		}
 	}
+	public boolean isInCheck(String color)
+	{
+		ArrayList<String> EnemyMoves = (color == "White")? GetPossEnemyMoves(PeiceColor.WHITE): GetPossEnemyMoves(PeiceColor.BLACK);
+		String KingID = (color == "White")? "w1" : "b1";
+		String KingLoc = getPeice(KingID).getLocation();
+		for(int x = 0; x < EnemyMoves.size(); x++)
+		{
+			if(EnemyMoves.get(x).equals(KingLoc))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	private ArrayList<String> GetPossEnemyMoves(PeiceColor p)
+	{
+		ArrayList<String> temp = new ArrayList<String>();
+		
+		if(p == PeiceColor.BLACK)
+		{
+			for(int x = 1; x < whiteID.size(); x++)
+			{
+				temp.addAll(findPeiceMoves(whiteID.get(x)));
+			}
+			
+		}
+		else
+		{
+			for(int x = 1; x < blackID.size(); x++)
+			{
+				temp.addAll(findPeiceMoves(blackID.get(x)));
+			}
+		}
+		return temp;
+	};
 	public Path getPath(String peiceId, String locationId)
 	{
 		Path path = new Path();
@@ -510,30 +760,33 @@ public class ChessUtil {
 			t = this.black[index].getType();
 		}
 		double pY = m.getPxLocation(current.split("-")[0]);
+		double pX = m.getPxLocation(current.split("-")[1]);
 		double lY = m.getPxLocation(locationId.split("-")[0]);
 		double lX = m.getPxLocation(locationId.split("-")[1]); 
 		if(t == PeiceType.KNIGHT)
 		{
-			path = MakePath(pY, lX, lY);
+			path = MakePathKinght(pX, pY, lX, lY);
 		}
 		else
 		{
-			path = MakePath(lX, lY);
+			path = MakePath(pX, pY, lX, lY);
 		}
 		return path;
 	}
-	private Path MakePath(double x, double y)
+	private Path MakePath(double px, double py, double x, double y)
 	{
 		Path path = new Path();
-		path.getElements().add(new MoveTo(x, y));
+		path.getElements().add(new MoveTo((px +40), (py+40)));
+		path.getElements().add(new LineTo((x+40), (y+40)));
 		
 		return path;
 	}
-	private Path MakePath(double py, double x, double y)
+	private Path MakePathKinght(double px, double py, double x, double y)
 	{
 		Path path = new Path();
-		path.getElements().add(new MoveTo(x, py));
-		path.getElements().add(new MoveTo(x, y));
+		path.getElements().add(new MoveTo((px +40), (py+40)));
+		path.getElements().add(new LineTo((px+40), (y+40)));
+		path.getElements().add(new LineTo((x+40), (y+40)));
 		
 		return path;
 	}

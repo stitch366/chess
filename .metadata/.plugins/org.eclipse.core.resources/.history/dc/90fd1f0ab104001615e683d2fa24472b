@@ -1,0 +1,40 @@
+package application;
+
+import java.util.ArrayList;
+
+public class CastleMove {
+	public String KingID;
+	public String moveKingTo;
+	public String RookID;
+	public String moveRookTo;
+	public ArrayList<String> spacesToCheck = new ArrayList<String>();
+	public CastleMove(String color, Castle c)
+	{
+		if(color == "White")
+		{
+			switch(c)
+			{
+				case KING_SIDE:
+					break;
+				case QUEEN_SIDE:
+					break;
+				default:
+					break;
+			
+			}
+		}
+		else
+		{
+			switch(c)
+			{
+				case KING_SIDE:
+					break;
+				case QUEEN_SIDE:
+					break;
+				default:
+					break;
+			
+			}
+		}
+	}
+}

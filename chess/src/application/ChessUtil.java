@@ -15,6 +15,7 @@ public class ChessUtil {
 	public Board board;
 	public CastleMove KingSide;
 	public CastleMove QueenSide;
+	public TurnInfo tInfo = new TurnInfo();
 	public ChessUtil()
 	{
 		this.KingSide = new CastleMove("White", Castle.KING_SIDE);
@@ -72,6 +73,10 @@ public class ChessUtil {
 		
 		this.board = new Board(white, black);
 	}
+	public void setTurnInfo(String Turn)
+	{
+		this.tInfo = new TurnInfo();
+	}
 	public void removeCapturedPeice(String id)
 	{
 		if(id.charAt(0) == 'b')
@@ -101,9 +106,9 @@ public class ChessUtil {
 		int pIndex = findPeiceIndex(id);
 		Peice p = id.charAt(0) == 'w' ? white[pIndex] : black[pIndex];
 		ArrayList<String> moves = new ArrayList<String>();
-		String EnemyKingId = id.charAt(0) == 'w' ? "b1" : "w1";
-		Peice EnemyKing = getPeice(EnemyKingId);
-		ArrayList<String> EKmoves = new ArrayList<String>();
+		//String EnemyKingId = id.charAt(0) == 'w' ? "b1" : "w1";
+		//Peice EnemyKing = getPeice(EnemyKingId);
+		//ArrayList<String> EKmoves = new ArrayList<String>();
 		switch(p.getType())
 		{
 			case BISHOP:
@@ -111,11 +116,11 @@ public class ChessUtil {
 				break;
 			case KING:
 				moves = getKingMoves(p);
+				//EKmoves = getKingMoves(EnemyKing);
+				//moves.removeAll(EKmoves);
 				break;
 			case KNIGHT:
 				moves = getKnightMoves(p);
-				EKmoves = getKnightMoves(EnemyKing);
-				moves.removeAll(EKmoves);
 				break;
 			case PAWN:
 				moves = getPawnMoves(p);
@@ -256,20 +261,347 @@ public class ChessUtil {
 		
 		return temp;
 	}
+	private ArrayList<String> getQueenEMoves(Peice p)
+	{
+		Movement m = new Movement();
+		ArrayList<String> temp = new ArrayList<String>();
+		ArrayList<String> protectedSpaces = new ArrayList<String>();
+		String t;
+		int neg = 0;
+		//Diagonal spaces
+		for(int x = 1; x > 0; x++)
+		{
+			if(m.genNewLocationID(x, x, p) != "NA")
+			{
+				t = m.genNewLocationID(x, x, p);
+				
+				if(checkForAlly(p.getColor(), t))
+				{
+					protectedSpaces.add(getSpacePeice(t));
+					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		for(int x = 1; x > 0; x++)
+		{
+			neg = x * -1;
+			if(m.genNewLocationID(x, neg, p) != "NA")
+			{
+				t = m.genNewLocationID(x, neg, p);
+				temp.add(t);
+				if(checkForAlly(p.getColor(), t))
+				{
+					protectedSpaces.add(getSpacePeice(t));
+					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		neg = 0;
+		for(int x = 1; x > 0; x++)
+		{
+			neg = x * -1;
+			if(m.genNewLocationID(neg, x, p) != "NA")
+			{
+				t = m.genNewLocationID(neg, x, p);
+				if(checkForAlly(p.getColor(), t))
+				{
+					protectedSpaces.add(getSpacePeice(t));
+					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		neg = 0;
+		for(int x = 1; x > 0; x++)
+		{
+			neg = x * -1;
+			if(m.genNewLocationID(neg, neg, p) != "NA")
+			{
+				t = m.genNewLocationID(neg, neg, p);
+				if(checkForAlly(p.getColor(), t))
+				{
+					protectedSpaces.add(getSpacePeice(t));
+					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		//Horizontal & Vertical
+		neg = 0;
+		for(int x = 1; x > 0; x++)
+		{
+			if(m.genNewLocationID(x, 0, p) != "NA")
+			{
+				t = m.genNewLocationID(x, 0, p);
+				if(checkForAlly(p.getColor(), t))
+				{
+					protectedSpaces.add(getSpacePeice(t));
+					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		for(int x = 1; x > 0; x++)
+		{
+			neg = x * -1;
+			if(m.genNewLocationID(neg, 0, p) != "NA")
+			{
+				t = m.genNewLocationID(neg, 0, p);
+				if(checkForAlly(p.getColor(), t))
+				{
+					protectedSpaces.add(getSpacePeice(t));
+					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		neg = 0;
+		for(int x = 1; x > 0; x++)
+		{
+			if(m.genNewLocationID(0, x, p) != "NA")
+			{
+				t = m.genNewLocationID(0, x, p);
+				if(checkForAlly(p.getColor(), t))
+				{
+					protectedSpaces.add(getSpacePeice(t));
+					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		for(int x = 1; x > 0; x++)
+		{
+			neg = x * -1;
+			if(m.genNewLocationID(0, neg, p) != "NA")
+			{
+				t = m.genNewLocationID(0, neg, p);
+				if(checkForAlly(p.getColor(), t))
+				{
+					protectedSpaces.add(getSpacePeice(t));
+					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		
+		return temp;
+	}
 	private ArrayList<String> getBishopMoves(Peice p)
 	{
+		Movement m = new Movement();
 		ArrayList<String> temp = new ArrayList<String>();
+		String t;
+		int neg = 0;
+		//Diagonal spaces
+				for(int x = 1; x > 0; x++)
+				{
+					if(m.genNewLocationID(x, x, p) != "NA")
+					{
+						t = m.genNewLocationID(x, x, p);
+						if(checkForEnemy(p.getColor(), t))
+						{
+							temp.add(t);
+							break;
+						}
+						else
+						{
+							temp.add(t);
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+				for(int x = 1; x > 0; x++)
+				{
+					neg = x * -1;
+					if(m.genNewLocationID(x, neg, p) != "NA")
+					{
+						t = m.genNewLocationID(x, neg, p);
+						temp.add(t);
+					    if(checkForEnemy(p.getColor(), t))
+						{
+							break;
+						}
+						else
+						{
+							temp.add(t);
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+				neg = 0;
+				for(int x = 1; x > 0; x++)
+				{
+					neg = x * -1;
+					if(m.genNewLocationID(neg, x, p) != "NA")
+					{
+						t = m.genNewLocationID(neg, x, p);
+						if(checkForEnemy(p.getColor(), t))
+						{
+							break;
+						}
+						else
+						{
+							temp.add(t);
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+				neg = 0;
+				for(int x = 1; x > 0; x++)
+				{
+					neg = x * -1;
+					if(m.genNewLocationID(neg, neg, p) != "NA")
+					{
+						t = m.genNewLocationID(neg, neg, p);
+						if(checkForEnemy(p.getColor(), t))
+						{
+							break;
+						}
+						else
+						{
+							temp.add(t);
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+				return temp;
+	}
+	private ArrayList<String> getBishopEMoves(Peice p)
+	{
+		Movement m = new Movement();
+		ArrayList<String> temp = new ArrayList<String>();
+		ArrayList<String> protectedSpaces = new ArrayList<String>();
 		String t;
 		int neg = 0;
 		for(int x = 1; x > 0; x++)
 		{
-			if(getMove(x, x, p) != "NA")
+			if(m.genNewLocationID(x, x, p) != "NA")
 			{
-				t = getMove(x, x, p);
-				temp.add(t);
-				if(checkForEnemy(p.getColor(), t))
+				t = m.genNewLocationID(x, x, p);
+				
+				if(checkForAlly(p.getColor(), t))
 				{
+					protectedSpaces.add(getSpacePeice(t));
 					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
 				}
 			}
 			else
@@ -280,13 +612,23 @@ public class ChessUtil {
 		for(int x = 1; x > 0; x++)
 		{
 			neg = x * -1;
-			if(getMove(x, neg, p) != "NA")
+			if(m.genNewLocationID(x, neg, p) != "NA")
 			{
-				t = getMove(x, neg, p);
+				t = m.genNewLocationID(x, neg, p);
 				temp.add(t);
-				if(checkForEnemy(p.getColor(), t))
+				if(checkForAlly(p.getColor(), t))
 				{
+					protectedSpaces.add(getSpacePeice(t));
 					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
 				}
 			}
 			else
@@ -298,13 +640,22 @@ public class ChessUtil {
 		for(int x = 1; x > 0; x++)
 		{
 			neg = x * -1;
-			if(getMove(neg, x, p) != "NA")
+			if(m.genNewLocationID(neg, x, p) != "NA")
 			{
-				t = getMove(neg, x, p);
-				temp.add(t);
-				if(checkForEnemy(p.getColor(), t))
+				t = m.genNewLocationID(neg, x, p);
+				if(checkForAlly(p.getColor(), t))
 				{
+					protectedSpaces.add(getSpacePeice(t));
 					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
 				}
 			}
 			else
@@ -316,84 +667,196 @@ public class ChessUtil {
 		for(int x = 1; x > 0; x++)
 		{
 			neg = x * -1;
-			if(getMove(neg, neg, p) != "NA")
+			if(m.genNewLocationID(neg, neg, p) != "NA")
 			{
-				t = getMove(neg, neg, p);
-				temp.add(t);
-				if(checkForEnemy(p.getColor(), t))
+				t = m.genNewLocationID(neg, neg, p);
+				if(checkForAlly(p.getColor(), t))
 				{
+					protectedSpaces.add(getSpacePeice(t));
 					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
 				}
 			}
 			else
 			{
 				break;
 			}
+		}
+		return temp;
+	}
+	private ArrayList<String> getSpacesAroundKing(Peice p)
+	{
+		Movement m = new Movement();
+		ArrayList<String> temp = new ArrayList<String>();
+		if(m.genNewLocationID(-1, -1, p) != "NA" )
+		{
+			temp.add(m.genNewLocationID(-1, -1, p));
+		}
+		if(m.genNewLocationID(-1, 1, p) != "NA")
+		{
+			temp.add(m.genNewLocationID(-1, 1, p));
+		}
+		if(m.genNewLocationID(1, -1, p) != "NA")
+		{
+			temp.add(m.genNewLocationID(1, -1, p));
+		}
+		if(m.genNewLocationID(1, 1, p) != "NA")
+		{
+			temp.add(m.genNewLocationID(1, 1, p));
+		}
+		if(m.genNewLocationID(-1, 0, p) != "NA")
+		{
+			temp.add(m.genNewLocationID(-1, 0, p));
+		}
+		if(m.genNewLocationID(0, 1, p) != "NA")
+		{
+			temp.add(m.genNewLocationID(0, 1, p));
+		}
+		if(m.genNewLocationID(0, -1, p) != "NA")
+		{
+			temp.add(m.genNewLocationID(0, -1, p));
+		}
+		if(m.genNewLocationID(1, 0, p) != "NA")
+		{
+			temp.add(m.genNewLocationID(1, 0, p));
 		}
 		return temp;
 	}
 	private ArrayList<String> getKingMoves(Peice p)
 	{
 		ArrayList<String> temp = new ArrayList<String>();
-		String t;
-		if(getMove(-1, -1, p) != "NA")
+		ArrayList<String> spAroundKing = getSpacesAroundKing(p);
+		for(int x = 0; x < spAroundKing.size(); x++ )
 		{
-			t = getMove(-1, -1, p);
-			temp.add(t);
-			
+			if(checkForAlly(p.getColor(), spAroundKing.get(x)))
+			{
+				temp.addAll(spAroundKing);
+			}
 		}
-		if(getMove(-1, 1, p) != "NA")
-		{
-			t = getMove(-1, 1, p);
-			temp.add(t);
-		}
-		if(getMove(1, -1, p) != "NA")
-		{
-			t = getMove(1, -1, p);
-			temp.add(t);
-		}
-		if(getMove(1, 1, p) != "NA")
-		{
-			t = getMove(1, 1, p);
-			temp.add(t);
-		}
-		if(getMove(-1, 0, p) != "NA")
-		{
-			t = getMove(-1, 0, p);
-			temp.add(t);
-		}
-		if(getMove(0, 1, p) != "NA")
-		{
-			t = getMove(0, 1, p);
-			temp.add(t);
-		}
-		if(getMove(0, -1, p) != "NA")
-		{
-			t = getMove(0, -1, p);
-			temp.add(t);
-		}
-		if(getMove(1, 0, p) != "NA")
-		{
-			t = getMove(1, 0, p);
-			temp.add(t);
-		}
-		temp.removeAll(GetPossEnemyMoves(p.getColor()));
 		return temp;
 	}
 	private ArrayList<String> getRookMoves(Peice p)
 	{
+		Movement m = new Movement();
 		ArrayList<String> temp = new ArrayList<String>();
+		String t;
+		int neg = 0;
+		//Horizontal & Vertical
+				neg = 0;
+				for(int x = 1; x > 0; x++)
+				{
+					if(m.genNewLocationID(x, 0, p) != "NA")
+					{
+						t = m.genNewLocationID(neg, neg, p);
+						if(checkForEnemy(p.getColor(), t))
+						{
+							break;
+						}
+						else
+						{
+							temp.add(t);
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+				for(int x = 1; x > 0; x++)
+				{
+					neg = x * -1;
+					if(m.genNewLocationID(neg, 0, p) != "NA")
+					{
+						t = m.genNewLocationID(neg, 0, p);
+						if(checkForEnemy(p.getColor(), t))
+						{
+							break;
+						}
+						else
+						{
+							temp.add(t);
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+				neg = 0;
+				for(int x = 1; x > 0; x++)
+				{
+					if(m.genNewLocationID(0, x, p) != "NA")
+					{
+						t = m.genNewLocationID(0, x, p);
+						if(checkForEnemy(p.getColor(), t))
+						{
+							break;
+						}
+						else
+						{
+							temp.add(t);
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+				for(int x = 1; x > 0; x++)
+				{
+					neg = x * -1;
+					if(m.genNewLocationID(0, neg, p) != "NA")
+					{
+						t = m.genNewLocationID(0, neg, p);
+						if(checkForEnemy(p.getColor(), t))
+						{
+							break;
+						}
+						else
+						{
+							temp.add(t);
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+		return temp;
+	}
+	private ArrayList<String> getRookEMoves(Peice p)
+	{
+		Movement m = new Movement();
+		ArrayList<String> temp = new ArrayList<String>();
+		ArrayList<String> protectedSpaces = new ArrayList<String>();
 		String t;
 		int neg = 0;
 		for(int x = 1; x > 0; x++)
 		{
-			if(getMove(x, 0, p) != "NA")
+			if(m.genNewLocationID(x, 0, p) != "NA")
 			{
-				t = getMove(x, 0, p);
-				temp.add(t);
-				if(checkForEnemy(p.getColor(), t))
+				t = m.genNewLocationID(x, 0, p);
+				if(checkForAlly(p.getColor(), t))
 				{
+					protectedSpaces.add(getSpacePeice(t));
 					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
 				}
 			}
 			else
@@ -404,13 +867,22 @@ public class ChessUtil {
 		for(int x = 1; x > 0; x++)
 		{
 			neg = x * -1;
-			if(getMove(neg, 0, p) != "NA")
+			if(m.genNewLocationID(neg, 0, p) != "NA")
 			{
-				t = getMove(neg, 0, p);
-				temp.add(t);
-				if(checkForEnemy(p.getColor(), t))
+				t = m.genNewLocationID(neg, 0, p);
+				if(checkForAlly(p.getColor(), t))
 				{
+					protectedSpaces.add(getSpacePeice(t));
 					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
 				}
 			}
 			else
@@ -421,13 +893,22 @@ public class ChessUtil {
 		neg = 0;
 		for(int x = 1; x > 0; x++)
 		{
-			if(getMove(0, x, p) != "NA")
+			if(m.genNewLocationID(0, x, p) != "NA")
 			{
-				t = getMove(0, x, p);
-				temp.add(t);
-				if(checkForEnemy(p.getColor(), t))
+				t = m.genNewLocationID(0, x, p);
+				if(checkForAlly(p.getColor(), t))
 				{
+					protectedSpaces.add(getSpacePeice(t));
 					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
 				}
 			}
 			else
@@ -438,13 +919,22 @@ public class ChessUtil {
 		for(int x = 1; x > 0; x++)
 		{
 			neg = x * -1;
-			if(getMove(0, neg, p) != "NA")
+			if(m.genNewLocationID(0, neg, p) != "NA")
 			{
-				t = getMove(0, neg, p);
-				temp.add(t);
-				if(checkForEnemy(p.getColor(), t))
+				t = m.genNewLocationID(0, neg, p);
+				if(checkForAlly(p.getColor(), t))
 				{
+					protectedSpaces.add(getSpacePeice(t));
 					break;
+				}
+				else if(checkForEnemy(p.getColor(), t))
+				{
+					temp.add(t);
+					break;
+				}
+				else
+				{
+					temp.add(t);
 				}
 			}
 			else
@@ -456,30 +946,37 @@ public class ChessUtil {
 	}
 	private ArrayList<String> getPawnMoves(Peice p)
 	{
+		Movement m = new Movement();
 		ArrayList<String> temp = new ArrayList<String>();
 		String t;
-		
 		switch(p.getColor())
 		{
 			case WHITE:
-				if(getMove(-1, -1, p) != "NA" && checkForEnemy(p.getColor(), getMove(-1, -1, p)) )
+				if(m.genNewLocationID(-1, -1, p) != "NA" )
 				{
-					t = getMove(-1, -1, p);
-					temp.add(t);
+					t = m.genNewLocationID(-1, -1, p);
+					if(checkForEnemy(p.getColor(), t))
+					{
+						temp.add(t);
+					}
+	
 				}
-				if(getMove(-1, 1, p) != "NA" && checkForEnemy(p.getColor(), getMove(-1, 1, p)) )
+				if(m.genNewLocationID(-1, 1, p) != "NA")
 				{
 					t = getMove(-1, 1, p);
-					temp.add(t);
+					if(checkForEnemy(p.getColor(), t))
+					{
+						temp.add(t);
+					}
 				}
-				if(getMove(-1, 0, p) != "NA" && (!checkForEnemy(p.getColor(), getMove(-1, 0, p))))
+				if(m.genNewLocationID(-1, 0, p) != "NA" && (!checkForEnemy(p.getColor(), m.genNewLocationID(-1, 0, p))))
 				{
 					t = getMove(-1, 0, p);
 					temp.add(t);
 				}
 				if(!p.isHasMoved())
 				{
-					if(getMove(-2, 0, p) != "NA" && (!checkForEnemy(p.getColor(), getMove(-2, 0, p))))
+					if(m.genNewLocationID(-2, 0, p) != "NA" && (!checkForEnemy(p.getColor(),m.genNewLocationID(-2, 0, p))))
 					{
 						t = getMove(-2, 0, p);
 						temp.add(t);
@@ -487,26 +984,134 @@ public class ChessUtil {
 				}
 				break;
 			case BLACK:
-				if(getMove(1, -1, p) != "NA" && checkForEnemy(p.getColor(), getMove(1, -1, p)) )
+				if(m.genNewLocationID(1, -1, p) != "NA" && checkForEnemy(p.getColor(), m.genNewLocationID(1, -1, p)) )
 				{
-					t = getMove(1, -1, p);
+					t = m.genNewLocationID(1, -1, p);
 					temp.add(t);
 				}
-				if(getMove(1, 1, p) != "NA" && checkForEnemy(p.getColor(), getMove(1, 1, p)) )
+				if(m.genNewLocationID(1, 1, p) != "NA" && checkForEnemy(p.getColor(), m.genNewLocationID(1, 1, p)) )
 				{
-					t = getMove(1, 1, p);
+					t = m.genNewLocationID(1, 1, p);
 					temp.add(t);
 				}
-				if(getMove(1, 0, p) != "NA" && (!checkForEnemy(p.getColor(), getMove(1, 0, p)) ))
+				if(m.genNewLocationID(1, 0, p) != "NA" && (!checkForEnemy(p.getColor(), m.genNewLocationID(1, 0, p)) ))
 				{
-					t = getMove(1, 0, p);
+					t = m.genNewLocationID(1, 0, p);
 					temp.add(t);
 				}
 				if(!p.isHasMoved())
 				{
-					if(getMove(2, 0, p) != "NA" && (!checkForEnemy(p.getColor(), getMove(2, 0, p))))
+					if(m.genNewLocationID(2, 0, p) != "NA" && (!checkForEnemy(p.getColor(), m.genNewLocationID(2, 0, p))))
 					{
-						t = getMove(2, 0, p);
+						t = m.genNewLocationID(2, 0, p);
+						temp.add(t);
+					}
+				}
+				break;
+		}
+		return temp;
+	}
+	private ArrayList<String> getPawnEMoves(Peice p)
+	{
+		Movement m = new Movement();
+		ArrayList<String> temp = new ArrayList<String>();
+		ArrayList<String> protectedSpaces = new ArrayList<String>();
+		ArrayList<String> attackable = new ArrayList<String>();
+		String t;
+		
+		switch(p.getColor())
+		{
+			case WHITE:
+				if(m.genNewLocationID(-1, -1, p) != "NA" )
+				{
+					t = m.genNewLocationID(-1, -1, p);
+					if(checkForEnemy(p.getColor(), t))
+					{
+						temp.add(t);
+					}
+					else if(checkForAlly(p.getColor(), t)) 
+					{
+						protectedSpaces.add(getSpacePeice(t));
+					}
+					else
+					{
+						attackable.add(t);
+					}
+	
+				}
+				if(m.genNewLocationID(-1, 1, p) != "NA")
+				{
+					t = getMove(-1, 1, p);
+					if(checkForEnemy(p.getColor(), t))
+					{
+						temp.add(t);
+					}
+					else if(checkForAlly(p.getColor(), t)) 
+					{
+						protectedSpaces.add(getSpacePeice(t));
+					}
+					else
+					{
+						attackable.add(t);
+					}
+				}
+				if(m.genNewLocationID(-1, 0, p) != "NA" && (!checkForEnemy(p.getColor(), m.genNewLocationID(-1, 0, p))))
+				{
+					t = getMove(-1, 0, p);
+					temp.add(t);
+				}
+				if(!p.isHasMoved())
+				{
+					if(m.genNewLocationID(-2, 0, p) != "NA" && (!checkForEnemy(p.getColor(),m.genNewLocationID(-2, 0, p))))
+					{
+						t = getMove(-2, 0, p);
+						temp.add(t);
+					}
+				}
+				break;
+			case BLACK:
+				if(m.genNewLocationID(1, -1, p) != "NA" )
+				{
+					t = m.genNewLocationID(1, -1, p);
+					if(checkForEnemy(p.getColor(), t))
+					{
+						temp.add(t);
+					}
+					else if(checkForAlly(p.getColor(), t)) 
+					{
+						protectedSpaces.add(getSpacePeice(t));
+					}
+					else
+					{
+						attackable.add(t);
+					}
+				}
+				if(m.genNewLocationID(1, 1, p) != "NA" )
+				{
+					t = m.genNewLocationID(1, 1, p);
+					if(checkForEnemy(p.getColor(), t))
+					{
+						temp.add(t);
+					}
+					else if(checkForAlly(p.getColor(), t)) 
+					{
+						protectedSpaces.add(getSpacePeice(t));
+					}
+					else
+					{
+						attackable.add(t);
+					}
+				}
+				if(m.genNewLocationID(1, 0, p) != "NA" && (!checkForEnemy(p.getColor(), m.genNewLocationID(1, 0, p)) ))
+				{
+					t = m.genNewLocationID(1, 0, p);
+					temp.add(t);
+				}
+				if(!p.isHasMoved())
+				{
+					if(m.genNewLocationID(2, 0, p) != "NA" && (!checkForEnemy(p.getColor(), m.genNewLocationID(2, 0, p))))
+					{
+						t = m.genNewLocationID(2, 0, p);
 						temp.add(t);
 					}
 				}
@@ -571,48 +1176,106 @@ public class ChessUtil {
 	}
 	private ArrayList<String> getKnightMoves(Peice p)
 	{
+		Movement m = new Movement();
 		ArrayList<String> temp = new ArrayList<String>();
+		ArrayList<String> protectedSpaces = new ArrayList<String>();
 		String t;
-		if(getMove(-2, -1, p) != "NA")
+		if(m.genNewLocationID(-2, -1, p) != "NA")
 		{
-			t = getMove(-2, -1, p);
-			temp.add(t);
+			t = m.genNewLocationID(-2, -1, p);
+			if(checkForAlly(p.getColor(), t))
+			{
+				protectedSpaces.add(getSpacePeice(t));
+			}
+			else
+			{
+				temp.add(t);
+			}
 			
 		}
-		if(getMove(-2, 1, p) != "NA")
+		if(m.genNewLocationID(-2, 1, p) != "NA")
 		{
-			t = getMove(-2, 1, p);
-			temp.add(t);
+			t = m.genNewLocationID(-2, 1, p);
+			if(checkForAlly(p.getColor(), t))
+			{
+				protectedSpaces.add(getSpacePeice(t));
+			}
+			else
+			{
+				temp.add(t);
+			}
 		}
-		if(getMove(2, -1, p) != "NA")
+		if(m.genNewLocationID(2, -1, p) != "NA")
 		{
-			t = getMove(2, -1, p);
-			temp.add(t);
+			t = m.genNewLocationID(2, -1, p);
+			if(checkForAlly(p.getColor(), t))
+			{
+				protectedSpaces.add(getSpacePeice(t));
+			}
+			else
+			{
+				temp.add(t);
+			}
 		}
-		if(getMove(2, 1, p) != "NA")
+		if(m.genNewLocationID(2, 1, p) != "NA")
 		{
-			t = getMove(2, 1, p);
-			temp.add(t);
+			t = m.genNewLocationID(2, 1, p);
+			if(checkForAlly(p.getColor(), t))
+			{
+				protectedSpaces.add(getSpacePeice(t));
+			}
+			else
+			{
+				temp.add(t);
+			}
 		}
-		if(getMove(-1, -2, p) != "NA")
+		if(m.genNewLocationID(-1, -2, p) != "NA")
 		{
-			t = getMove(-1, -2, p);
-			temp.add(t);
+			t = m.genNewLocationID(-1, -2, p);
+			if(checkForAlly(p.getColor(), t))
+			{
+				protectedSpaces.add(getSpacePeice(t));
+			}
+			else
+			{
+				temp.add(t);
+			}
 		}
-		if(getMove(-1, 2, p) != "NA")
+		if(m.genNewLocationID(-1, 2, p) != "NA")
 		{
-			t = getMove(-1, 2, p);
-			temp.add(t);
+			t = m.genNewLocationID(-1, 2, p);
+			if(checkForAlly(p.getColor(), t))
+			{
+				protectedSpaces.add(getSpacePeice(t));
+			}
+			else
+			{
+				temp.add(t);
+			}
 		}
-		if(getMove(1, -2, p) != "NA")
+		if(m.genNewLocationID(1, -2, p) != "NA")
 		{
-			t = getMove(1, -2, p);
-			temp.add(t);
+			t = m.genNewLocationID(1, -2, p);
+			if(checkForAlly(p.getColor(), t))
+			{
+				protectedSpaces.add(getSpacePeice(t));
+			}
+			else
+			{
+				temp.add(t);
+			}
 		}
-		if(getMove(1, 2, p) != "NA")
+		if(m.genNewLocationID(1, 2, p) != "NA")
 		{
-			t = getMove(1, 2, p);
-			temp.add(t);
+			t = m.genNewLocationID(1, 2, p);
+			if(checkForAlly(p.getColor(), t))
+			{
+				protectedSpaces.add(getSpacePeice(t));
+			}
+			else
+			{
+				temp.add(t);
+			}
 		}
 		
 		return temp;

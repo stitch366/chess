@@ -403,9 +403,18 @@ public class BoardController {
 	    		}
 	    	}
 	    	setCheckedMessage(inCheck, isMate);
+	    	endofgame(isMate);
 	    	
 	    }
-	    
+	    public void endofgame(boolean isMate)
+	    {
+	    	String Winner = (CurrentTurn == "White")? "Black": "White";
+	    	if(isMate)
+	    	{
+	    		WinnerLabel.setText(Winner + " Wins!");
+	    		endofGame.toFront();
+	    	}
+	    }
 	    
 	    public void setPathTransition(String id, Path p)
 	    {
@@ -785,6 +794,9 @@ public class BoardController {
 
 	    @FXML
 	    private Label turnLabel;
+	    
+	    @FXML
+	    private Label WinnerLabel;
 
 	    @FXML
 	    private Region RookIcon;
@@ -800,6 +812,9 @@ public class BoardController {
 
 	    @FXML
 	    private AnchorPane Image;
+	    
+	    @FXML
+	    private AnchorPane endofGame;
 
 	    @FXML
 	    private Label MessageBox;
@@ -863,8 +878,8 @@ public class BoardController {
 	    {
 	    	if(checkmate)
 	    	{
-	    		MessageBox.setText("Checkmate!");
-	    		MessageBox2.setText("You Lose!");
+	    		MessageBox.setText("");
+	    		MessageBox2.setText("");
 	    	}
 	    	else
 	    	{
@@ -952,6 +967,7 @@ public class BoardController {
 	    }
 	    public PeiceType OpenDialog()
 	    {
+	    	dialogArea.toFront();
 	    	DialogController page = new DialogController();
 	    	Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Edit Person");
@@ -964,7 +980,7 @@ public class BoardController {
 	        {
 	        	dialogStage.showAndWait();
 	        }
-	        
+	        dialogArea.toBack();
 	        return ((DialogController) dialogStage.getScene().getRoot()).getSelection();
 
 	    }

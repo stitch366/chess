@@ -85,4 +85,21 @@ public class Movement {
 				return "a";
 		}
 	}
+	
+	public String genNewLocationID(int rMove, int cMove, Peice p)
+	{
+		Movement m = new Movement();
+		int cRow = m.convertLetterToNum(p.location.split("-")[0]);
+		int cCol = Integer.parseInt(p.location.split("-")[1]);
+		String moveTo;
+		if((cRow + rMove <= 8) && (cCol + cMove <= 8) && (cRow + rMove >= 1) && (cCol + cMove >= 1))
+		{
+			moveTo = m.convertNumToLetter(cRow + rMove) + "-" + (cCol + cMove);
+			return moveTo;
+		}
+		else
+		{
+			return "NA";
+		}
+	}
 }

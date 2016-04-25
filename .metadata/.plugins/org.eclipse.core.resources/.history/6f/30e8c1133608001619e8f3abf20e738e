@@ -1,0 +1,53 @@
+import java.util.ArrayList;
+
+public class Peice {
+
+	String location;
+	PeiceColor color;
+	PeiceType type;
+	boolean hasMoved;
+	ArrayList<String> range = ArrayList<String>();
+	
+	public Peice(String l, PeiceColor c, PeiceType t, boolean h)
+	{
+		this.location = l;
+		this.color = c;
+		this.type = t;
+		this.hasMoved = h;
+	}
+	
+	public void setLocation(String l)
+	{
+		this.location = l;
+	}
+	public String getLocation()
+	{
+		return location;
+	}
+	
+	public void setColor(PeiceColor c)
+	{
+		this.color = c;
+	}
+	public PeiceColor getColor()
+	{
+		return color;
+	}
+	
+	public void setType(PeiceType t)
+	{
+		this.type = t;
+	}
+	public PeiceType getType()
+	{
+		return type;
+	}
+	public void setHasMoved(boolean h)
+	{
+		this.hasMoved = h;
+	}
+	public boolean isHasMoved()
+	{
+		return hasMoved;
+	}
+}

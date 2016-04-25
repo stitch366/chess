@@ -1,0 +1,12 @@
+White
+w1$King$8-4$true
+w3$Bishop$8-3$true
+w7$Rook$4-7$true
+w8$Rook$5-1$true
+w10$Pawn$6-8$true
+Black
+b1$King$1-8$true
+b3$Bishop$7-8$true
+b7$Rook$1-7$true
+b8$Rook$1-5$true
+b10$Pawn$2-6$false

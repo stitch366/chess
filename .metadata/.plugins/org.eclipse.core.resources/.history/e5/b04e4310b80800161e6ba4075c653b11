@@ -1,0 +1,17 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class AttackBoard {
+	boolean board[][] = new boolean[8][8];
+	
+	AttackBoard(ArrayList<String> enemyId, HashMap<String, Peice> enemy)
+	{
+		for(int x = 0; x < 8; x++)
+		{
+			for (int y = 0; y < 8; x++)
+			{
+				this.board[x][y]= false;
+			}
+		}
+	}
+}

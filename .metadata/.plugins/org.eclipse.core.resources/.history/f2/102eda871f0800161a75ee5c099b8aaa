@@ -1,0 +1,36 @@
+
+
+public enum PeiceType {
+	KING, QUEEN, BISHOP, KNIGHT, ROOK, PAWN;
+	
+	
+	
+	private Offset[] offsets;
+	
+	public Offset[] getMoveOffsets()
+	{
+		switch(this)
+		{
+			Offset[] off;
+			case BISHOP:
+				off = {new Offset(1, 1), new Offset(1, -1), new Offset(-1, -1), new Offset(-1, 1)};
+				break;
+			case KING:
+				off = {new Offset(1, 1), new Offset(1, 0), new Offset(1, -1), new Offset(0, -1), new Offset(-1, -1), new Offset(-1, 0), new Offset(-1, 1), new Offset(0, 1)};
+				break;
+			case KNIGHT:
+				break;
+			case PAWN:
+				break;
+			case QUEEN:
+				off = {new Offset(1, 1), new Offset(1, 0), new Offset(1, -1), new Offset(0, -1), new Offset(-1, -1), new Offset(-1, 0), new Offset(-1, 1), new Offset(0, 1)};
+				break;
+			case ROOK:
+				off = {new Offset(0, 1), new Offset(1, 0), new Offset(0, -1), new Offset(-1, 0)};
+				break;
+			default:
+				break;
+		
+		}
+	}
+}

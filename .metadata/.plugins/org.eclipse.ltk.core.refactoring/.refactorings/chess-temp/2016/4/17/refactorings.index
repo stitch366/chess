@@ -1,0 +1,14 @@
+1461275824111	Encapsulate field 'CoordCode'
+1461275877848	Encapsulate field 'peiceID'
+1461282689317	Encapsulate field 'row'
+1461282721137	Encapsulate field 'row'
+1461282727081	Encapsulate field 'col'
+1461289742103	Encapsulate field 'val'
+1461289887715	Encapsulate field 'val'
+1461358190775	Move 'TestGame.txt' to 'games'
+1461361218962	Encapsulate field 'alt'
+1461364122819	Rename type 'Peice'
+1461364145154	Rename type 'PeiceType'
+1461364170122	Rename type 'PeiceColor'
+1461447758491	Copy compilation units
+1461447777817	Copy compilation unit

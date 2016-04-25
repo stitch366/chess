@@ -1,0 +1,88 @@
+package application;
+
+import javafx.animation.PathTransition;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
+
+public class BoardController {
+	  	@FXML
+	    private Button KingSide;
+
+	    @FXML
+	    private Region KnightIcon;
+
+	    @FXML
+	    private AnchorPane overlay;
+
+	    @FXML
+	    private AnchorPane TurnPanel;
+
+	    @FXML
+	    private AnchorPane Image;
+
+	    @FXML
+	    private Label WinnerLabel;
+
+	    @FXML
+	    private Label MessageBox;
+
+	    @FXML
+	    private Region BishopIcon;
+
+	    @FXML
+	    private Region QueenIcon;
+
+	    @FXML
+	    private Label turnLabel;
+
+	    @FXML
+	    private Button QueenSide;
+
+	    @FXML
+	    private AnchorPane background;
+
+	    @FXML
+	    private Region RookIcon;
+
+	    @FXML
+	    private AnchorPane root;
+
+	    @FXML
+	    private Button TurnProcesser2;
+
+	    @FXML
+	    private AnchorPane spaces;
+
+	    @FXML
+	    private Label MessageBox2;
+
+	    @FXML
+	    private Button TurnProcesser;
+
+	    @FXML
+	    private Region KingIcon;
+
+	    @FXML
+	    private Region PawnIcon;
+
+	    @FXML
+	    private AnchorPane dialogArea;
+
+	    @FXML
+	    private AnchorPane endofGame;
+
+	    @FXML
+	    private AnchorPane board;
+	    
+	    private String[] peiceTypes = {"KingIcon", "QueenIcon", "BishopIcon", "KnightIcon", "RookIcon", "PawnIcon"};
+	    private MoveInfo mov = new MoveInfo();
+	    
+	    private String CurrentTurn = "White";
+	    
+	    private PathTransition pathTransition;
+	    
+	    private PathTransition pathTransition2;
+}

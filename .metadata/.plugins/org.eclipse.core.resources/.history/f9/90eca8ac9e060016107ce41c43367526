@@ -1,0 +1,31 @@
+package application;
+
+public class MoveSim {
+	ChessUtil sim;
+	String CurrentColor;
+	MoveSim(ChessUtil s, String c)
+	{
+		this.sim = s;
+		this.CurrentColor = c;
+	}
+	
+	public boolean doesMoveNegateCheck(String pId, String newLocation)
+	{
+		boolean noLongerCheck;
+		simulateMove(pId,newLocation);
+		
+		if(sim.isInCheck(color))
+		
+	}
+	
+	private void simulateMove(String pId, String newLocation)
+	{
+		String capturedPInSim = sim.getSpacePeice(newLocation);
+		if(capturedPInSim != "")
+		{
+			sim.removeCapturedPeice(capturedPInSim);
+		}
+		sim.doMove(pId, newLocation);
+		sim.setTurnInfo(CurrentColor);
+	}
+}

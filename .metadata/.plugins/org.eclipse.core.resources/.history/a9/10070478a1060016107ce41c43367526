@@ -1,0 +1,82 @@
+package application;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class TurnInfo {
+	HashMap<String,ArrayList<String>> EnemyMoves = new HashMap<String,ArrayList<String>>();
+	HashMap<String,ArrayList<String>> EPeicesProtectedFromKing = new HashMap<String,ArrayList<String>>();
+	HashMap<String,ArrayList<String>> EmptySpacesAttackableByEPawn = new HashMap<String,ArrayList<String>>();
+	HashMap<String,ArrayList<String>> AllyMoves = new HashMap<String,ArrayList<String>>();
+	String EnemyCheckingKing = "";
+	boolean isInCheck;
+	
+	public void addToEnemyMoves(String EnemyPeice, ArrayList<String> EPmoves)
+	{
+		this.EnemyMoves.put(EnemyPeice, EPmoves);
+	}
+	public ArrayList<String> getAmovEntry(String id)
+	{
+		return this.AllyMoves.get(id);
+	} 
+	public ArrayList<String> getEmovEntry(String id)
+	{
+		return this.EnemyMoves.get(id);
+	}
+	public ArrayList<String> getEProtected(String id)
+	{
+		return this.EPeicesProtectedFromKing.get(id);
+	}
+	public ArrayList<String> getEPawnAttackable(String id)
+	{
+		return this.EmptySpacesAttackableByEPawn.get(id);
+	}
+	public boolean HasEntryInEPeicesProtectedFromKing(String id)
+	{
+		return this.EPeicesProtectedFromKing.containsKey(id);
+	}
+	public boolean HasEntryInEmptySpacesAttackableByEPawn(String id)
+	{
+		return this.EmptySpacesAttackableByEPawn.containsKey(id);
+	}
+	public void addToProtected(String EnemyPeice, ArrayList<String> PeicesProtected)
+	{
+		this.EPeicesProtectedFromKing.put(EnemyPeice, PeicesProtected);
+	}
+	public void addToPawnAttackable(String EnemyPeice, ArrayList<String> attackable)
+	{
+		EmptySpacesAttackableByEPawn.put(EnemyPeice, attackable);
+	}
+	public void addToAllyMoves(String AllyPeice, ArrayList<String> APmoves)
+	{
+		this.AllyMoves.put(AllyPeice, APmoves);
+	}
+	public void checkEnemyMovesForKingLocation(String KingLocation, ArrayList<String> EnemyList)
+	{
+		ArrayList<String> peiceMoves;
+		for(int x = 0; x < EnemyList.size(); x++)
+		{
+			peiceMoves = EnemyMoves.get(EnemyList.get(x));
+			for(int y = 0; y < peiceMoves.size(); y++)
+			{
+				if(peiceMoves.get(y).equals(KingLocation))
+				{
+					this.EnemyCheckingKing = EnemyList.get(x);
+					this.isInCheck = true;
+				}
+			}
+		}
+		this.isInCheck =  false;
+	}
+	
+	public boolean getIsInCheck()
+	{
+		return this.isInCheck;
+	}
+	public String getEnemyCheckingKing()
+	{
+		return EnemyCheckingKing;
+	}
+	
+	
+}

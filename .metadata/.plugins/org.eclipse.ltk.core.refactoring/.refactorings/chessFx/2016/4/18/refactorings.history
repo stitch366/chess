@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move &apos;games&apos; to &apos;chessFx&apos;" description="Move &apos;games&apos; to &apos;chessFx&apos;" destination="/chessFx" element1="/chess-temp/games" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="1" stamp="1461601286790" updateReferences="true"/>
+</session>

@@ -1,0 +1,57 @@
+import java.util.ArrayList;
+
+public class Peice {
+
+	String location;
+	PeiceColor color;
+	PeiceType type;
+	boolean hasMoved;
+	ArrayList<String> range = new ArrayList<String>(0);
+	
+	public Peice(String l, PeiceColor c, PeiceType t, boolean h)
+	{
+		this.location = l;
+		this.color = c;
+		this.type = t;
+		this.hasMoved = h;
+	}
+	
+	public void setLocation(String l)
+	{
+		this.location = l;
+	}
+	public String getLocation()
+	{
+		return location;
+	}
+	private Offset[] convertToBPawn(Offset[] o)
+	{
+		Offset[] off = {new Offset(o[0].getRow()*-1, o[0].getRow()), new Offset(o[1].getRow()*-1, o[1].getRow()), new Offset(o[2].getRow()*-1, o[2].getRow()), new Offset(o[3].getRow()*-1, o[3].getRow())};
+		return off;
+	}
+	public void setColor(PeiceColor c)
+	{
+		this.color = c;
+	}
+	public PeiceColor getColor()
+	{
+		return color;
+	}
+	
+	public void setType(PeiceType t)
+	{
+		this.type = t;
+	}
+	public PeiceType getType()
+	{
+		return type;
+	}
+	public void setHasMoved(boolean h)
+	{
+		this.hasMoved = h;
+	}
+	public boolean isHasMoved()
+	{
+		return hasMoved;
+	}
+}

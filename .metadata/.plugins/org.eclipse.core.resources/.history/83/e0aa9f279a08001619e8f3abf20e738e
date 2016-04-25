@@ -1,0 +1,151 @@
+import java.util.ArrayList;
+
+public class Peice {
+
+	public String location;
+	public PeiceColor color;
+	public PeiceType type;
+	public boolean hasMoved;
+	public ArrayList<String> range = new ArrayList<String>(0);
+	public ArrayList<String> moves;
+	
+	public ArrayList<String> getMoves() {
+		return moves;
+	}
+
+	public void setMoves(ArrayList<String> moves) {
+		this.moves = moves;
+	}
+
+	public Peice(String l, PeiceColor c, PeiceType t, boolean h)
+	{
+		this.location = l;
+		this.color = c;
+		this.type = t;
+		this.hasMoved = h;
+		setRange();
+	}
+	
+	public void setLocation(String l)
+	{
+		this.location = l;
+		setRange();
+	}
+	public String getLocation()
+	{
+		return location;
+	}
+	private void setRange()
+	{
+		this.range= new ArrayList<String>(0);
+		Offset[] offs = (this.type == PeiceType.PAWN && this.color == PeiceColor.BLACK)? convertToBPawn(this.getType().getMoveOffsets()): this.getType().getMoveOffsets(); 
+		switch(this.type)
+		{
+			case BISHOP:
+				this.range.addAll(indefinite(offs));
+				break;
+			case KING:
+				this.range.addAll(fixed(offs));
+				break;
+			case KNIGHT:
+				this.range.addAll(fixed(offs));
+				break;
+			case PAWN:
+				this.range.addAll(fixed(offs));
+				break;
+			case QUEEN:
+				this.range.addAll(indefinite(offs));
+				break;
+			case ROOK:
+				this.range.addAll(indefinite(offs));
+				break;
+			default:
+				break;
+		
+		}
+		
+	}
+	private ArrayList<String> indefinite(Offset[] o)
+	{
+		ArrayList<String> temp = new ArrayList<String>(0);
+		int cRow = Integer.parseInt(this.location.split("-")[0]);
+		int cCol = Integer.parseInt(this.location.split("-")[1]);
+		String moveTo = "";
+		int count = 1;
+		for(int x = 0; x < o.length; x++)
+		{
+			moveTo = "";
+			while(moveTo !="NA")
+			{
+				if((cRow + (o[x].getRow() * count) <= 8) && (cCol + (o[x].getCol() * count) <= 8) && (cRow + (o[x].getRow() * count) >= 1) && (cCol + (o[x].getCol() * count) >= 1))
+				{
+					moveTo = (cRow + (o[x].getRow() * count)) + "-" + (cCol + (o[x].getCol() * count));
+					temp.add(moveTo);
+				}
+				else
+				{
+					moveTo = "NA";
+				}
+				count++;
+			}
+			count = 1;
+		}
+		return temp;
+	}
+	private ArrayList<String> fixed(Offset[] o)
+	{
+		ArrayList<String> temp = new ArrayList<String>(0);
+		int cRow = Integer.parseInt(this.location.split("-")[0]);
+		int cCol = Integer.parseInt(this.location.split("-")[1]);
+		String moveTo = "";
+		for(int x = 0; x < o.length; x++)
+		{
+			moveTo = "";
+			if((x == 3)&&(this.type == PeiceType.PAWN && this.hasMoved))
+			{
+				
+			}
+			else if((cRow + o[x].getRow() <= 8) && (cCol + o[x].getCol() <= 8) && (cRow + o[x].getRow() >= 1) && (cCol + o[x].getCol() >= 1))
+			{
+				moveTo = (cRow + o[x].getRow()) + "-" + (cCol + o[x].getCol());
+				temp.add(moveTo);
+			}
+			
+		}
+		return temp;
+	}
+	private Offset[] convertToBPawn(Offset[] o)
+	{
+		Offset[] off = {new Offset(o[0].getRow()*-1, o[0].getCol()), new Offset(o[1].getRow()*-1, o[1].getCol()), new Offset(o[2].getRow()*-1, o[2].getCol()), new Offset(o[3].getRow()*-1, o[3].getCol())};
+		return off;
+	}
+	public void setColor(PeiceColor c)
+	{
+		this.color = c;
+	}
+	public PeiceColor getColor()
+	{
+		return color;
+	}
+	
+	public void setType(PeiceType t)
+	{
+		this.type = t;
+	}
+	public PeiceType getType()
+	{
+		return type;
+	}
+	public void setHasMoved(boolean h)
+	{
+		this.hasMoved = h;
+	}
+	public boolean isHasMoved()
+	{
+		return hasMoved;
+	}
+	public ArrayList<String> getRange()
+	{
+		return this.range;
+	} 
+}

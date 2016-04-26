@@ -16,7 +16,10 @@ public class MoveSim {
 		{
 			this.ally.put(aId.get(x), new Piece(a.get(aId.get(x))));
 		}
-		this.enemyId = eId;
+		for(int x = 0; x < eId.size(); x++)
+		{
+			this.enemyId.add(eId.get(x));
+		}
 		for(int x = 0; x < enemyId.size(); x++)
 		{
 			this.enemy.put(enemyId.get(x), new Piece(e.get(enemyId.get(x))));

@@ -51,8 +51,8 @@ public class CastleMove {
 					this.moveRookTo = "1-6";
 					this.spacesToCheck.add("1-6");
 					this.spacesToCheck.add("1-7");
-					this.spacesMovedonByKing.add("1-6");
-					this.spacesMovedonByKing.add("1-7");
+					this.spacesMovedonByKing.add("h-6");
+					this.spacesMovedonByKing.add("h-7");
 					break;
 				case QUEEN_SIDE:
 					this.moveKingTo = "1-3";

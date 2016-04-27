@@ -362,7 +362,7 @@ public class ChessUtil {
 				temp.addAll(movefixed(offs, p.getLocation(), p));
 				break;
 			case PAWN:
-				temp.addAll(movePawn(offs, p.getLocation(), p));
+				temp.addAll(movefixed(offs, p.getLocation(), p));
 				break;
 			case QUEEN:
 				temp.addAll(moveindefinite(offs, p.getLocation(), p.getColor().getVal()));
@@ -511,50 +511,6 @@ public class ChessUtil {
 				}
 				
 				
-			}
-			
-		}
-		return temp;
-	}
-	private ArrayList<String> movePawn(Offset[] o, String location, Piece c)
-	{
-		ArrayList<String> temp = new ArrayList<String>(0);
-		int cRow = Integer.parseInt(location.split("-")[0]);
-		int cCol = Integer.parseInt(location.split("-")[1]);
-		Offset[] atkOffests = {o[1], o[2]};
-		Offset[] movOffests = {o[0], o[3]};
-		String moveTo = "";
-		String pid;
-		//Evaluates movement Pawn Offests 
-		if((cRow + movOffests[0].getRow() <= 8) && (cCol + movOffests[0].getCol() <= 8) && (cRow + movOffests[0].getRow() >= 1) && (cCol + movOffests[0].getCol() >= 1))
-		{
-			pid =board[(cRow + movOffests[0].getRow())-1][(cCol + movOffests[0].getCol())-1].getPeiceID();
-			moveTo = (cRow + movOffests[0].getRow()) + "-" + (cCol + movOffests[0].getCol());
-			if(pid == "")
-			{
-				temp.add(moveTo);
-				if((cRow + movOffests[1].getRow() <= 8) && (cCol + movOffests[1].getCol() <= 8) && (cRow + movOffests[1].getRow() >= 1) && (cCol + movOffests[1].getCol() >= 1))
-				{
-					pid =board[(cRow + movOffests[1].getRow())-1][(cCol + movOffests[1].getCol())-1].getPeiceID();
-					moveTo = (cRow + movOffests[1].getRow()) + "-" + (cCol + movOffests[1].getCol());
-					if(pid == "" && (!c.isHasMoved()))
-					{
-						temp.add(moveTo);
-					}
-				}
-			}
-		}
-		for(int x = 0; x < atkOffests.length; x++)
-		{
-			moveTo = "";
-			if((cRow + atkOffests[x].getRow() <= 8) && (cCol + atkOffests[x].getCol() <= 8) && (cRow + atkOffests[x].getRow() >= 1) && (cCol + atkOffests[x].getCol() >= 1))
-			{
-				pid =board[(cRow + atkOffests[x].getRow())-1][(cCol + atkOffests[x].getCol())-1].getPeiceID();
-				moveTo = (cRow + atkOffests[x].getRow()) + "-" + (cCol + atkOffests[x].getCol());
-				if(pid != "" && pid.charAt(0) != c.getColor().getVal())
-				{
-					temp.add(moveTo);
-				}
 			}
 			
 		}

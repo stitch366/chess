@@ -362,7 +362,7 @@ public class ChessUtil {
 				temp.addAll(movefixed(offs, p.getLocation(), p));
 				break;
 			case PAWN:
-				temp.addAll(movePawn(offs, p.getLocation(), p));
+				temp.addAll(movefixed(offs, p.getLocation(), p));
 				break;
 			case QUEEN:
 				temp.addAll(moveindefinite(offs, p.getLocation(), p.getColor().getVal()));
@@ -549,8 +549,8 @@ public class ChessUtil {
 			moveTo = "";
 			if((cRow + atkOffests[x].getRow() <= 8) && (cCol + atkOffests[x].getCol() <= 8) && (cRow + atkOffests[x].getRow() >= 1) && (cCol + atkOffests[x].getCol() >= 1))
 			{
-				pid =board[(cRow + atkOffests[x].getRow())-1][(cCol + atkOffests[x].getCol())-1].getPeiceID();
-				moveTo = (cRow + atkOffests[x].getRow()) + "-" + (cCol + atkOffests[x].getCol());
+				pid =board[(cRow + o[x].getRow())-1][(cCol + o[x].getCol())-1].getPeiceID();
+				moveTo = (cRow + o[x].getRow()) + "-" + (cCol + o[x].getCol());
 				if(pid != "" && pid.charAt(0) != c.getColor().getVal())
 				{
 					temp.add(moveTo);

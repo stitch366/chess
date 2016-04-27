@@ -328,10 +328,6 @@ public class BoardController {
 	    		disablePeicesToggle(chess.whiteId, true);
 	    		setTurn(CurrentTurn);
 	    		inCheck = chess.isInCheck(CurrentTurn);
-	    		if(inCheck)
-	    		{
-	    			isMate = chess.isMate(CurrentTurn);
-	    		}
 	    		disablePeicesToggle(chess.blackId, false);
 	    	}
 	    	else
@@ -339,10 +335,6 @@ public class BoardController {
 	    		disablePeicesToggle(chess.blackId, true);
 	    		setTurn(CurrentTurn);
 	    		inCheck = chess.isInCheck(CurrentTurn);
-	    		if(inCheck)
-	    		{
-	    			isMate = chess.isMate(CurrentTurn);
-	    		}
 	    		disablePeicesToggle(chess.whiteId, false);
 	    	}
 	    	setCheckedMessage(inCheck);
@@ -444,7 +436,7 @@ public class BoardController {
 	    @FXML
 	    public void PostMoveProcessing(ActionEvent event)
 	    {
-	    	if((mov.getLocation().charAt(0) == '8' || mov.getLocation().charAt(0) == '1') && chess.getPieceType(mov.getPeiceId()) == PieceType.PAWN)
+	    	if((mov.getLocation().charAt(0) == 'h' || mov.getLocation().charAt(0) == 'a') && chess.getPieceType(mov.getPeiceId()) == PieceType.PAWN)
 	    	{
 	    		Premote(mov.getPeiceId());
 	    	}

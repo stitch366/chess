@@ -328,10 +328,6 @@ public class BoardController {
 	    		disablePeicesToggle(chess.whiteId, true);
 	    		setTurn(CurrentTurn);
 	    		inCheck = chess.isInCheck(CurrentTurn);
-	    		if(inCheck)
-	    		{
-	    			isMate = chess.isMate(CurrentTurn);
-	    		}
 	    		disablePeicesToggle(chess.blackId, false);
 	    	}
 	    	else
@@ -339,10 +335,6 @@ public class BoardController {
 	    		disablePeicesToggle(chess.blackId, true);
 	    		setTurn(CurrentTurn);
 	    		inCheck = chess.isInCheck(CurrentTurn);
-	    		if(inCheck)
-	    		{
-	    			isMate = chess.isMate(CurrentTurn);
-	    		}
 	    		disablePeicesToggle(chess.whiteId, false);
 	    	}
 	    	setCheckedMessage(inCheck);

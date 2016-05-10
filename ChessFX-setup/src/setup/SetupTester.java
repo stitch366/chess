@@ -1,0 +1,17 @@
+package setup;
+
+public class SetupTester {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ChessFXAppSetup setup = new ChessFXAppSetup();
+		if(!setup.isHaveAllFilesBeenMade())
+		{
+			setup.makeFiles();
+		}
+
+	}
+	
+	
+
+}

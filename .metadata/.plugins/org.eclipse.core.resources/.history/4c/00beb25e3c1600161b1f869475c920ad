@@ -1,0 +1,51 @@
+package application;
+	
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import Enums.MoveSpeed;
+import Enums.Theme;
+import config.EnumOpt;
+import config.Option;
+import config.UserConfig;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.stage.Stage;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+
+
+public class Main extends Application {
+	public UserConfig config; 
+	@Override
+	public void start(Stage primaryStage) {
+		
+		 try {
+	            Parent root = new BoardController();
+	            Scene scene = new Scene(root);
+	            scene.getStylesheets().add(getClass().getResource("../themes/classic.css").toExternalForm());
+	            primaryStage.setScene(scene);
+	            primaryStage.setWidth(1102);
+	            primaryStage.setHeight(749);
+	            primaryStage.setResizable(false);
+	            primaryStage.show();
+	        } catch(Exception e) {
+	            e.printStackTrace();
+	        }
+	}
+	
+	public void createConfigData()
+	{
+		HashMap<String, Option> options = new HashMap<String, Option>(0);
+		ArrayList<String> optNames = new ArrayList<String>(0);
+		optNames.add("theme");
+		options.put("theme", new EnumOpt(Theme.class, 0));
+		optNames.add("movspeed");
+		options.put("movspeed", new EnumOpt(MoveSpeed.class, 0));
+		this.config = new UserConfig("C:/ChessFX/config.txt", optNames, options);
+	}
+	public static void main(String[] args) {
+		launch(args);
+	}
+}

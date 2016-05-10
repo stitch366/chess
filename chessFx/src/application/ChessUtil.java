@@ -922,6 +922,7 @@ public class ChessUtil {
 		
 		return board[row][col].getPeiceID();
 	}
+	
 	public Path getPath(String peiceId, String locationId)
 	{
 		Path path = new Path();

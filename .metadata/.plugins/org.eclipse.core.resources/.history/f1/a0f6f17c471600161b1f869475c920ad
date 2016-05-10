@@ -1,0 +1,156 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+#chessboard
+{
+	-fx-background-image:url('../chess-Img/oriental/chessboard.png');
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;
+}
+.wKnight
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/wKnight.png');
+}
+.bKnight
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/bKnight.png');
+}
+.wKing
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/wKing.png');
+}
+.bKing
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/bKing.png');
+}
+.wQueen
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/wQueen.png');
+}
+.bQueen
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/bQueen.png');
+}
+.wRook
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/wRook.png');
+}
+.bRook
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/bRook.png');
+}
+.wBishop
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/wBishop.png');
+}
+.bBishop
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/bBishop.png');
+}
+.wPawn
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/wPawn.png');
+}
+.bPawn
+{
+	-fx-background-image:url('../chess-Img/oriental/pieces/bPawn.png');
+}
+.wKnightIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/wKnight.png');
+}
+.bKnightIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/bKnight.png');
+}
+.wKingIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/wKing.png');
+}
+.bKingIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/bKing.png');
+}
+.wQueenIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/wQueen.png');
+}
+.bQueenIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/bQueen.png');
+}
+.wRookIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/wRook.png');
+}
+.bRookIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/bRook.png');
+}
+.wBishopIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/wBishop.png');
+}
+.bBishopIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/bBishop.png');
+}
+.wPawnIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/wPawn.png');
+}
+.bPawnIcon
+{
+	-fx-background-image:url('../chess-Img/oriental/pieceIcons/bPawn.png');
+}
+.canMove
+{
+	-fx-background-color:rgba(255,255,0,.5);
+}
+.canCapture
+{
+	-fx-background-color:rgba(255,0,0,.5);
+}
+.selectedPeice
+{
+	-fx-background-color:radial-gradient(center 50% 50% , radius 100% , rgba(0,135,255,0), rgba(0,135,255,.2), rgba(0,135,255,.5));
+}
+.dialog
+{
+	-fx-background-color: rgb(255, 153, 51);
+}
+.dialogHead
+{
+	-fx-background-color:rgb(204, 102, 0);
+}
+.dialogButton
+{
+	-fx-background-color:rgb(204, 102, 0);
+}
+.dialogButton:hover
+{
+	-fx-background-color:rgb(179, 89, 0);
+}
+.turnHead
+{
+	-fx-background-color:rgb(204, 102, 0);
+}
+.top-panel
+{
+	-fx-background-color:rgb(204, 102, 0);
+}
+.panel
+{
+	-fx-background-color: rgb(255, 153, 51);
+}
+
+.button
+{
+	-fx-background-color:rgb(204, 102, 0);
+}
+.button:hover
+{
+	-fx-background-color:rgb(179, 89, 0);
+}
+.overlay
+{
+	-fx-background-color:rgba(51, 51, 51, .5);
+}

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="root" prefHeight="720.0" prefWidth="1102.0" stylesheets="@application/application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.BoardController">
+<fx:root fx:id="root" prefHeight="720.0" prefWidth="1102.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane fx:id="dialogArea" prefHeight="720.0" prefWidth="1102.0" styleClass="overlay" />
       <AnchorPane fx:id="endofGame" prefHeight="720.0" prefWidth="1102.0" styleClass="overlay">
@@ -41,7 +41,7 @@
          	  <AnchorPane id="board-spaces" fx:id="spaces" layoutX="15.0" layoutY="15.0" prefHeight="640.0" prefWidth="640.0">
                <children>
                   <Region id="b7" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bRook" />
-                  <Region id="b3"  onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bBishop" translateX="160.0" />
+                  <Region id="b3" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bBishop" translateX="160.0" />
                   <Region id="b5" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bKnight" translateX="80.0" />
                   <Region id="b2" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bQueen" translateX="240.0" />
                   <Region id="b1" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="bKing" translateX="320.0" />
@@ -70,8 +70,8 @@
                   <Region id="w9" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wPawn" translateY="480.0" />
                   <Region id="w15" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wPawn" translateX="480.0" translateY="480.0" />
                   <Region id="w11" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wPawn" translateX="160.0" translateY="480.0" />
-                  <Region id="w8"  onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wRook" translateX="560.0" translateY="560.0" />
-                  <Region id="w4"  onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wBishop" translateX="400.0" translateY="560.0" />
+                  <Region id="w8" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wRook" translateX="560.0" translateY="560.0" />
+                  <Region id="w4" onMouseClicked="#peiceClick" prefHeight="80.0" prefWidth="80.0" styleClass="wBishop" translateX="400.0" translateY="560.0" />
                </children>
             </AnchorPane>
             <AnchorPane id="board-overlay" fx:id="overlay" layoutX="15.0" layoutY="15.0" prefHeight="640.0" prefWidth="640.0">
@@ -278,4 +278,4 @@
 	  </AnchorPane>
       <AnchorPane prefHeight="50.0" prefWidth="1102.0" styleClass="top-panel" />
    </children>
-</AnchorPane>
+</fx:root>

@@ -1,0 +1,63 @@
+package setup;
+
+import java.io.File;
+
+public class ChessFXAppSetup {
+	private boolean haveAllFilesBeenMade;
+	private boolean hasSubDirBeenMade;
+	private boolean hasMainDirBeenMade;
+	private boolean hasConfigBeenMade;
+	private File mainDir = new File("C:/ChessFX");
+	private File subDir = new File("C:/ChessFX/games");
+	private File configFile = new File("C:/ChessFX/config.txt");
+	public ChessFXAppSetup() {
+		
+		if(!mainDir.exists())
+		{
+			this.hasSubDirBeenMade = false;
+			this.hasMainDirBeenMade= false;
+			this.hasConfigBeenMade= false;
+		}
+		else
+		{
+			this.hasMainDirBeenMade= true;
+			if(!subDir.exists())
+			{
+				this.hasSubDirBeenMade = false;
+			}
+			else
+			{
+				this.hasSubDirBeenMade = true;
+			}
+			if(!configFile.exists())
+			{
+				this.hasConfigBeenMade = false;
+			}
+			else
+			{
+				this.hasConfigBeenMade = true;
+			}
+		}
+		
+		this.haveAllFilesBeenMade = (hasMainDirBeenMade && hasSubDirBeenMade && hasConfigBeenMade);
+	}
+	public boolean isHaveAllFilesBeenMade() {
+		return haveAllFilesBeenMade;
+	}
+	public void makeFiles()
+	{
+		if(!hasMainDirBeenMade)
+		{
+			mainDir.mkdir();
+		}
+		if(!hasSubDirBeenMade)
+		{
+			subDir.mkdir();
+		}
+		if(!hasConfigBeenMade)
+		{
+			
+		}
+	}
+	
+}

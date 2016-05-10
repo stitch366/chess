@@ -1,0 +1,11 @@
+package Enums;
+
+public enum Theme {
+	CLASSIC("classic.css"), SAKURA("sakura.css"), ORIENTAL("oriental.css");
+	
+	private final String stylesheet;
+
+	private Theme(String stylesheet) {
+		this.stylesheet = stylesheet;
+	}
+}

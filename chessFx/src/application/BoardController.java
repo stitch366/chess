@@ -1,13 +1,18 @@
 package application;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import Enums.MoveSpeed;
+import Enums.Theme;
+import config.UserConfig;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,7 +25,22 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class BoardController {
+public class BoardController extends AnchorPane {
+		private UserConfig config;
+		public BoardController(UserConfig c)
+		{
+			this.config = c;
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Chess.fxml"));
+			fxmlLoader.setRoot(this);
+			fxmlLoader.setController(this);
+
+	        try {
+	            fxmlLoader.load();
+	        } catch (IOException exception) {
+	            throw new RuntimeException(exception);
+	        }
+		}
+	
 	  	@FXML
 	    private Button KingSide;
 
@@ -107,12 +127,14 @@ public class BoardController {
 	        String id = ((Node) event.getSource()).getId();
 	        ((Node) event.getSource()).toFront();
 	        ArrayList<String> moves = chess.getPeiceMoves(id);
+	        
 	        try
 	        {
 		        if(moves.size() != 0)
 		        {
 		        	mov.setPeiceId(id);
 		        	mov.setOpts(moves);
+		        	mov.setInital(chess.getPeiceLocation(id));
 		        	setMoveStyle(chess.getPeiceLocation(id), 'p');
 		        	for(int x = 0; x < moves.size(); x++)
 		        	{
@@ -145,13 +167,16 @@ public class BoardController {
 	    private void moveClick(MouseEvent event) {
 	        String id = ((Node) event.getSource()).getId();
 	        mov.setLocation(id);
+	        mov.setSpacesMoved(chess.getPieceType(mov.getPeiceId()));
 	        setMoveStyle(chess.getPeiceLocation(mov.getPeiceId()), 'r');
 	        Path p = chess.getPath(mov.getPeiceId(), id);
 	        if(chess.checkForPeice(id))
 	        {
 	        	mov.setCapturedPeice(chess.getSpacePeice(id));
 	        }
-	        setPathTransition(mov.getPeiceId(), p);
+	        MoveSpeed speed = MoveSpeed.valueOf(config.getValue("movspeed"));
+	        double time = mov.getSpacesMoved() * speed.getMillisec(); 
+	        setPathTransition(mov.getPeiceId(), p, time);
 	        chess.doMove(mov.getPeiceId(), id);
 	        
 	        pathTransition.setInterpolator(Interpolator.LINEAR);
@@ -180,8 +205,11 @@ public class BoardController {
 	    	p.toFront();
 	    	p = root.lookup("#" + KingId);
 	    	p.toFront();
-	    	setPathTransition(KingId, kPath);
-	    	setPathTransition2(RookId, rPath);
+	    	MoveSpeed speed = MoveSpeed.valueOf(config.getValue("movspeed"));
+		    double time = 2 * speed.getMillisec(); 
+		    double time2 = 2 * speed.getMillisec(); 
+	    	setPathTransition(KingId, kPath, time);
+	    	setPathTransition2(RookId, rPath, time2);
 	    	pathTransition.setInterpolator(Interpolator.LINEAR);
 	    	pathTransition2.setInterpolator(Interpolator.LINEAR);
 	    	pathTransition.setOnFinished(e->AfterPeiceMove2());
@@ -206,8 +234,11 @@ public class BoardController {
 	    	p.toFront();
 	    	p = root.lookup("#" + KingId);
 	    	p.toFront();
-	    	setPathTransition(KingId, kPath);
-	    	setPathTransition2(RookId, rPath);
+	    	MoveSpeed speed = MoveSpeed.valueOf(config.getValue("movspeed"));
+		    double time = 2 * speed.getMillisec(); 
+		    double time2 = 3 * speed.getMillisec(); 
+	    	setPathTransition(KingId, kPath, time);
+	    	setPathTransition2(RookId, rPath, time2);
 	    	pathTransition.setInterpolator(Interpolator.LINEAR);
 	    	pathTransition2.setInterpolator(Interpolator.LINEAR);
 	    	pathTransition.setOnFinished(e->AfterPeiceMove2());
@@ -253,15 +284,15 @@ public class BoardController {
 	    {
 	    	pathTransition.play();
 	    }
-	    public void setPathTransition(String id, Path p)
+	    public void setPathTransition(String id, Path p, double time)
 	    {
 	       Node piece = root.lookup("#" + id);
-		   pathTransition = new PathTransition(Duration.millis(4000), p, piece);   	
+		   pathTransition = new PathTransition(Duration.millis(time), p, piece);   	
 	    }
-	    public void setPathTransition2(String id, Path p)
+	    public void setPathTransition2(String id, Path p, double time)
 	    {
 	       Node piece = root.lookup("#" + id);
-		   pathTransition2 = new PathTransition(Duration.millis(4000), p, piece);   	
+		   pathTransition2 = new PathTransition(Duration.millis(time), p, piece);   	
 	    }
 	    public void ChangeCurrentTurnValue()
 	    {
@@ -404,6 +435,7 @@ public class BoardController {
 	    }
 	    public PieceType OpenDialog()
 	    {
+	    	Theme style = Theme.valueOf(config.getValue("theme"));
 	    	dialogArea.toFront();
 	    	DialogController page = new DialogController();
 	    	Stage dialogStage = new Stage();
@@ -411,7 +443,7 @@ public class BoardController {
 	        dialogStage.initModality(Modality.WINDOW_MODAL);
 	        dialogStage.initOwner(this.overlay.getScene().getWindow());
 	        Scene scene = new Scene(page);
-	        scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	        scene.getStylesheets().add(getClass().getResource(Global.baseStylePath + style.getStylesheet()).toExternalForm());
 	        dialogStage.setScene(scene);
 	        while(page.getSelection() == null)
 	        {

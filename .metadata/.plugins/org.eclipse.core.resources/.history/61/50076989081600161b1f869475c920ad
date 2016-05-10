@@ -1,0 +1,9 @@
+package setup;
+
+public class ChessFXAppSetup {
+	private boolean haveFilesBeenMade;
+	public ChessFXAppSetup(boolean haveFilesBeenMade) {
+		this.haveFilesBeenMade = haveFilesBeenMade;
+	}
+	
+}

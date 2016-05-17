@@ -1,0 +1,14 @@
+package settings;
+
+import javafx.scene.layout.AnchorPane;
+
+public class ConfigControlPanel extends AnchorPane {
+	public ConfigControlPanel()
+	{
+		
+	}
+	public void initialize()
+	{
+		
+	}
+}

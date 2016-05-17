@@ -7,3 +7,11 @@
 1462833908757	Move file
 1462835141484	Move 'ChessFXConfigEnums.jar' to 'lib'
 1462835144581	Move 'UserConfigAPI-1.0.jar' to 'lib'
+1462919061923	Rename package 'application'
+1462919146512	Move compilation unit
+1462919498607	Delete element
+1462977623209	Copy compilation unit
+1462979665288	Encapsulate field 'comboString'
+1462981125061	Encapsulate field 'radioText'
+1463149877647	Copy compilation units
+1463149923819	Copy compilation unit

@@ -1,0 +1,43 @@
+package general;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+
+import config.EnumOpt;
+import config.Option;
+import config.UserConfig;
+
+public class Global {
+	public static String baseStylePath = "../themes/";
+	public static String baseSavedGamePath = "C:/ChessFX/games";
+	public static String configPath = "C:/ChessFX/config.txt";
+	
+	public static UserConfig getConfig()
+	{
+		HashMap<String, Option> options = new HashMap<String, Option>(0);
+		ArrayList<String> optNames = new ArrayList<String>(0);
+		optNames.add("theme");
+		options.put("theme", new EnumOpt(Theme.class, 0));
+		optNames.add("movspeed");
+		options.put("movspeed", new EnumOpt(MoveSpeed.class, 0));
+		return new UserConfig("C:/ChessFX/config.txt", optNames, options);
+	}
+	public static String getThemeStylesheetPath()
+	{
+		UserConfig config = getConfig();
+		Theme style = Theme.valueOf(config.getValue("theme"));
+		return baseStylePath + style.getStylesheet();
+	}
+	public static int getMillisecPerSpace()
+	{
+		UserConfig config = getConfig();
+		MoveSpeed speed = MoveSpeed.valueOf(config.getValue("movspeed"));
+		return speed.getMillisec(); 
+	}
+	
+	public static GameFileHandler getGameFileHandler()
+	{
+		return new GameFileHandler();
+	}
+}

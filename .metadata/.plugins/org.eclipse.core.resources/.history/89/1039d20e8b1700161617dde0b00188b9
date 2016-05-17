@@ -1,0 +1,18 @@
+package general;
+
+public enum Theme {
+	CLASSIC("classic.css"), SAKURA("sakura.css"), ORIENTAL("oriental.css");
+	
+	private final String stylesheet;
+
+	private Theme(String stylesheet) {
+		this.stylesheet = stylesheet;
+	}
+
+	/**
+	 * @return the stylesheet
+	 */
+	public String getStylesheet() {
+		return stylesheet;
+	}
+}

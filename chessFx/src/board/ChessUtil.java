@@ -1,0 +1,872 @@
+package board;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+
+public class ChessUtil {
+	//Space[row][col]
+	//CoordsCode = "row-col"
+	public String GameFile = "";
+	public Space[][] board = new Space[8][8];
+	public ArrayList<String> blackId = new ArrayList<String>(0);
+	public ArrayList<String> whiteId = new ArrayList<String>(0);
+	public HashMap<String, Piece> white = new HashMap<String, Piece>(0);
+	public HashMap<String, Piece> black = new HashMap<String, Piece>(0);
+	public HashMap<String, ArrayList<String>> validMovePool = new HashMap<String, ArrayList<String>> (0);
+	public CastleMove KingSide;
+	public CastleMove QueenSide;
+	public String[] spaceId = new String[64];
+	public boolean inCheck;
+	
+	public ChessUtil()
+	{
+		ChessGameData gd = new ChessGameData();
+		for(int x = 0; x < 8; x++)
+		{
+			this.spaceId[x] = "1-"+ (x+1);
+			this.spaceId[x + 8] = "2-"+ (x+1);
+			this.spaceId[x + 16] = "3-"+ (x+1);
+			this.spaceId[x + 24] = "4-"+ (x+1);
+			this.spaceId[x + 32] = "5-"+ (x+1);
+			this.spaceId[x + 40] = "6-"+ (x+1);
+			this.spaceId[x + 48] = "7-"+ (x+1);
+			this.spaceId[x + 56] = "8-"+ (x+1);
+		}
+		
+		this.black = gd.black;
+		this.blackId = gd.blackId;
+		this.white = gd.white;
+		this.whiteId = gd.whiteId;
+		this.board = gd.board;
+		
+		setAllRange(blackId);
+		setAllRange(whiteId);
+		setAllMoves(blackId);
+		setAllMoves(whiteId);
+		
+	}
+	public ChessUtil(ChessGameData gd)
+	{
+		for(int x = 0; x < 8; x++)
+		{
+			for (int y = 0; y < 8; y++)
+			{
+				this.board[x][y]= new Space((x+1)+"-"+(y+1), "");
+			}
+		}
+		this.black = gd.black;
+		this.blackId = gd.blackId;
+		this.white = gd.white;
+		this.whiteId = gd.whiteId;
+		this.board = gd.board;
+		this.GameFile = gd.GameFileName;
+		setAllRange(blackId);
+		setAllRange(whiteId);
+		setAllMoves(blackId);
+		setAllMoves(whiteId);
+	}
+	public void SaveGame(String ct)
+	{
+		ChessGameData gd = new ChessGameData(ct, GameFile, board, blackId, whiteId, white, black);
+		gd.saveData();
+	}
+	public void OutPutboard()
+	{
+		String row;
+		String temp;
+		String p;
+		for(int x =0; x < 8; x++)
+		{
+			row = "";
+			for(int y =0; y < 8; y++)
+			{
+				temp = board[x][y].getPeiceID();
+				if(temp == "")
+				{
+					row = row + "|    ";
+				}
+				else
+				{
+					if(temp.charAt(0)== 'w')
+					{
+						p = white.get(temp).getColor().getVal()+ white.get(temp).getType().getAlt();
+					}
+					else
+					{
+						p = black.get(temp).getColor().getVal()+ black.get(temp).getType().getAlt();
+					}
+					row = row + "| "+p+" ";
+				}
+			}
+			row = row + "|";
+			System.out.println(row);
+			System.out.println("________________________________________");
+		}
+	}
+	private PieceType convertStrToPeiceType(String str)
+	{
+		switch(str)
+		{
+			case "King":
+				return PieceType.KING;
+			case "Queen": 
+				return PieceType.QUEEN;
+			case "Bishop":
+				return PieceType.BISHOP;
+			case "Knight": 
+				return PieceType.KNIGHT;
+			case "Rook":
+				return PieceType.ROOK;
+			case "Pawn":
+			default:
+				return PieceType.PAWN;
+		}
+	}
+	private ArrayList<String> getGameFile(String filename)
+	{
+		ArrayList<String> gamefileLines = new ArrayList<String>(0);
+		File file = new File("games/"+filename);
+	    FileInputStream fis = null;
+	   
+	      try {
+			fis = new FileInputStream(file);
+			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+			String line = null;
+		  	try {
+				while ((line = br.readLine()) != null) {
+					gamefileLines.add(line);
+				}
+				br.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		   
+		  
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return gamefileLines;
+	}
+	public void removePiece(String id)
+	{
+		if(id.charAt(0) == 'b')
+		{
+			this.blackId.remove(id);
+			this.black.remove(id);
+		}
+		else
+		{
+			this.whiteId.remove(id);
+			this.white.remove(id);
+		}
+	}
+	public void setAllMoves(ArrayList<String> keyList)
+	{
+		for(int x =0; x < keyList.size(); x++)
+		{
+			setMoves(keyList.get(x));
+		}
+	}
+	public void setAllRange(ArrayList<String> keyList)
+	{
+		for(int x =0; x < keyList.size(); x++)
+		{
+			setRange(keyList.get(x));
+		}
+	}
+	
+	private void setMoves(String id)
+	{
+		boolean isWhite = false;
+		if(id.charAt(0)== PieceColor.WHITE.getVal())
+		{
+			isWhite = true;
+		}
+		ArrayList<String> temp = new ArrayList<String>(0);
+		Piece p = isWhite? white.get(id): black.get(id);
+		Offset[] offs = p.getType().getMoveOffsets(p.getColor()); 
+		switch(p.getType())
+		{
+			case BISHOP:
+				temp.addAll(moveindefinite(offs, p.getLocation(), p.getColor().getVal()));
+				break;
+			case KING:
+				temp.addAll(getKingMoves(movefixed(offs, p.getLocation(), p), p.getColor().getVal()));
+				break;
+			case KNIGHT:
+				temp.addAll(movefixed(offs, p.getLocation(), p));
+				break;
+			case PAWN:
+				temp.addAll(movePawn(offs, p.getLocation(), p));
+				break;
+			case QUEEN:
+				temp.addAll(moveindefinite(offs, p.getLocation(), p.getColor().getVal()));
+				break;
+			case ROOK:
+				temp.addAll(moveindefinite(offs, p.getLocation(), p.getColor().getVal()));
+				break;
+			default:
+				break;
+		
+		}
+		if(isWhite)
+		{
+			this.white.get(id).setMoves(temp);
+		}
+		else
+		{
+			this.black.get(id).setMoves(temp);
+		}
+		
+	}
+	private void setRange(String id)
+	{
+		boolean isWhite = false;
+		if(id.charAt(0)== PieceColor.WHITE.getVal())
+		{
+			isWhite = true;
+		}
+		ArrayList<String> temp = new ArrayList<String>(0);
+		Piece p = isWhite? white.get(id): black.get(id);
+		Offset[] offs = p.getType().getMoveOffsets(p.getColor()); 
+		switch(p.getType())
+		{
+			case BISHOP:
+				temp.addAll(rangeindefinite(offs, p.getLocation(), p.getColor().getVal()));
+				break;
+			case KING:
+				temp.addAll(rangefixed(offs, p.getLocation(), p));
+				break;
+			case KNIGHT:
+				temp.addAll(rangefixed(offs, p.getLocation(), p));
+				break;
+			case PAWN:
+				temp.addAll(rangefixed(offs, p.getLocation(), p));
+				break;
+			case QUEEN:
+				temp.addAll(rangeindefinite(offs, p.getLocation(), p.getColor().getVal()));
+				break;
+			case ROOK:
+				temp.addAll(rangeindefinite(offs, p.getLocation(), p.getColor().getVal()));
+				break;
+			default:
+				break;
+		
+		}
+		if(isWhite)
+		{
+			this.white.get(id).setRange(temp);
+		}
+		else
+		{
+			this.black.get(id).setRange(temp);
+		}
+		
+	}
+	private ArrayList<String> moveindefinite(Offset[] o, String location, char c)
+	{
+		ArrayList<String> temp = new ArrayList<String>(0);
+		int cRow = Integer.parseInt(location.split("-")[0]);
+		int cCol = Integer.parseInt(location.split("-")[1]);
+		String moveTo = "";
+		String pid;
+		int count = 1;
+		for(int x = 0; x < o.length; x++)
+		{
+			moveTo = "";
+			while(moveTo !="NA")
+			{
+				if((cRow + (o[x].getRow() * count) <= 8) && (cCol + (o[x].getCol() * count) <= 8) && (cRow + (o[x].getRow() * count) >= 1) && (cCol + (o[x].getCol() * count) >= 1))
+				{
+					moveTo = (cRow + (o[x].getRow() * count)) + "-" + (cCol + (o[x].getCol() * count));
+					pid =board[(cRow + (o[x].getRow() * count))-1][(cCol + (o[x].getCol() * count))-1].getPeiceID();
+					if(pid =="")
+					{
+						temp.add(moveTo);
+					}
+					else if(pid.charAt(0)== c)
+					{
+						moveTo="NA";
+					}
+					else
+					{
+						temp.add(moveTo);
+						moveTo="NA";
+					}
+				}
+				else
+				{
+					moveTo = "NA";
+				}
+				count++;
+			}
+			count = 1;
+		}
+		return temp;
+	}
+	private ArrayList<String> movefixed(Offset[] o, String location, Piece c)
+	{
+		ArrayList<String> temp = new ArrayList<String>(0);
+		int cRow = Integer.parseInt(location.split("-")[0]);
+		int cCol = Integer.parseInt(location.split("-")[1]);
+		String moveTo = "";
+		String pid;
+		for(int x = 0; x < o.length; x++)
+		{
+			moveTo = "";
+			
+			if((x == 3)&&(c.getType() == PieceType.PAWN && c.isHasMoved()))
+			{
+				
+			}
+			else if((cRow + o[x].getRow() <= 8) && (cCol + o[x].getCol() <= 8) && (cRow + o[x].getRow() >= 1) && (cCol + o[x].getCol() >= 1))
+			{
+				pid =board[(cRow + o[x].getRow())-1][(cCol + o[x].getCol())-1].getPeiceID();
+				moveTo = (cRow + o[x].getRow()) + "-" + (cCol + o[x].getCol());
+				if((x == 2 || x== 1)&&c.getType() == PieceType.PAWN )
+				{
+					if(pid != "" && pid.charAt(0) != c.getColor().getVal())
+					{
+						temp.add(moveTo);
+					}
+				}
+				else if((x == 0 || x== 3)&&c.getType() == PieceType.PAWN )
+				{
+					if(pid == "")
+					{
+						temp.add(moveTo);
+					}
+				}
+				else
+				{
+					if(pid == "" || pid.charAt(0) != c.getColor().getVal())
+					{
+						temp.add(moveTo);
+					}
+				}
+				
+				
+			}
+			
+		}
+		return temp;
+	}
+	private ArrayList<String> movePawn(Offset[] o, String location, Piece c)
+	{
+		ArrayList<String> temp = new ArrayList<String>(0);
+		int cRow = Integer.parseInt(location.split("-")[0]);
+		int cCol = Integer.parseInt(location.split("-")[1]);
+		Offset[] atkOffests = {o[1], o[2]};
+		Offset[] movOffests = {o[0], o[3]};
+		String moveTo = "";
+		String pid;
+		//Evaluates movement Pawn Offests 
+		if((cRow + movOffests[0].getRow() <= 8) && (cCol + movOffests[0].getCol() <= 8) && (cRow + movOffests[0].getRow() >= 1) && (cCol + movOffests[0].getCol() >= 1))
+		{
+			pid =board[(cRow + movOffests[0].getRow())-1][(cCol + movOffests[0].getCol())-1].getPeiceID();
+			moveTo = (cRow + movOffests[0].getRow()) + "-" + (cCol + movOffests[0].getCol());
+			if(pid == "")
+			{
+				temp.add(moveTo);
+				if((cRow + movOffests[1].getRow() <= 8) && (cCol + movOffests[1].getCol() <= 8) && (cRow + movOffests[1].getRow() >= 1) && (cCol + movOffests[1].getCol() >= 1))
+				{
+					pid =board[(cRow + movOffests[1].getRow())-1][(cCol + movOffests[1].getCol())-1].getPeiceID();
+					moveTo = (cRow + movOffests[1].getRow()) + "-" + (cCol + movOffests[1].getCol());
+					if(pid == "" && (!c.isHasMoved()))
+					{
+						temp.add(moveTo);
+					}
+				}
+			}
+		}
+		for(int x = 0; x < atkOffests.length; x++)
+		{
+			moveTo = "";
+			if((cRow + atkOffests[x].getRow() <= 8) && (cCol + atkOffests[x].getCol() <= 8) && (cRow + atkOffests[x].getRow() >= 1) && (cCol + atkOffests[x].getCol() >= 1))
+			{
+				pid =board[(cRow + atkOffests[x].getRow())-1][(cCol + atkOffests[x].getCol())-1].getPeiceID();
+				moveTo = (cRow + atkOffests[x].getRow()) + "-" + (cCol + atkOffests[x].getCol());
+				if(pid != "" && pid.charAt(0) != c.getColor().getVal())
+				{
+					temp.add(moveTo);
+				}
+			}
+			
+		}
+		return temp;
+	}
+	private ArrayList<String> rangeindefinite(Offset[] o, String location, char c)
+	{
+		ArrayList<String> temp = new ArrayList<String>(0);
+		int cRow = Integer.parseInt(location.split("-")[0]);
+		int cCol = Integer.parseInt(location.split("-")[1]);
+		String moveTo = "";
+		String pid;
+		int count = 1;
+		for(int x = 0; x < o.length; x++)
+		{
+			moveTo = "";
+			while(moveTo !="NA")
+			{
+				if((cRow + (o[x].getRow() * count) <= 8) && (cCol + (o[x].getCol() * count) <= 8) && (cRow + (o[x].getRow() * count) >= 1) && (cCol + (o[x].getCol() * count) >= 1))
+				{
+					moveTo = (cRow + (o[x].getRow() * count)) + "-" + (cCol + (o[x].getCol() * count));
+					pid =board[(cRow + (o[x].getRow() * count))-1][(cCol + (o[x].getCol() * count))-1].getPeiceID();
+					if(pid =="")
+					{
+						temp.add(moveTo);
+					}
+					else if(pid.charAt(0)== c)
+					{
+						temp.add(moveTo);
+						moveTo="NA";
+					}
+					else
+					{
+						temp.add(moveTo);
+						moveTo="NA";
+					}
+				}
+				else
+				{
+					moveTo = "NA";
+				}
+				count++;
+			}
+			count = 1;
+		}
+		return temp;
+	}
+	public ArrayList<String> getKingMoves(ArrayList<String> baseMoves, char c)
+	{
+		AttackBoard enemyAttackboard = (c == PieceColor.WHITE.getVal())? new AttackBoard(blackId, black): new AttackBoard(whiteId, white);
+		ArrayList<String> temp = new ArrayList<String>(0);;
+		
+		for (int x = 0; x < baseMoves.size(); x ++)
+		{
+			if(enemyAttackboard.isKingSafeAt(baseMoves.get(x)))
+			{
+				temp.add(baseMoves.get(x));
+			}
+		}
+		
+		return temp;
+	}
+	private ArrayList<String> rangefixed(Offset[] o, String location, Piece c)
+	{
+		ArrayList<String> temp = new ArrayList<String>(0);
+		int cRow = Integer.parseInt(location.split("-")[0]);
+		int cCol = Integer.parseInt(location.split("-")[1]);
+		String moveTo = "";
+		for(int x = 0; x < o.length; x++)
+		{
+			moveTo = "";
+			
+			
+			if((cRow + o[x].getRow() <= 8) && (cCol + o[x].getCol() <= 8) && (cRow + o[x].getRow() >= 1) && (cCol + o[x].getCol() >= 1))
+			{
+				moveTo = (cRow + o[x].getRow()) + "-" + (cCol + o[x].getCol());
+				if(c.getType() == PieceType.PAWN)
+				{
+					if((x == 2 || x== 1)&&c.getType() == PieceType.PAWN )
+					{
+							temp.add(moveTo);
+					}
+				}
+				
+				else
+				{
+					temp.add(moveTo);
+				}
+				
+				
+			}
+			
+		}
+		return temp;
+	}
+	public void doMove(String pId, String newLocation)
+	{
+		String cLocation;
+		boolean MovedBefore;
+		if(pId.charAt(0) == 'b')
+		{
+			cLocation = this.black.get(pId).getLocation();
+			MovedBefore = this.black.get(pId).isHasMoved();
+		}
+		else
+		{
+			cLocation = this.white.get(pId).getLocation();
+			MovedBefore = this.white.get(pId).isHasMoved();
+		}
+		int cRow = Integer.parseInt(cLocation.split("-")[0]) - 1;
+		int cCol = Integer.parseInt(cLocation.split("-")[1]) - 1;
+		int row = Integer.parseInt(newLocation.split("-")[0]) - 1;
+		int col = Integer.parseInt(newLocation.split("-")[1]) - 1;
+		this.board[cRow][cCol].setPeiceID("");
+		this.board[row][col].setPeiceID(pId);
+		if(pId.charAt(0) == 'b')
+		{
+			this.black.get(pId).setLocation(newLocation);
+			if(!MovedBefore)
+			{
+				this.black.get(pId).setHasMoved(true);
+			}
+		}
+		else
+		{
+			this.white.get(pId).setLocation(newLocation);
+			if(!MovedBefore)
+			{
+				this.white.get(pId).setHasMoved(true);
+			}
+		}
+		setAllRange(blackId);
+		setAllRange(whiteId);
+		setAllMoves(blackId);
+		setAllMoves(whiteId);
+	}
+	public ArrayList<String> getPeiceMoves(String id)
+	{
+		return validMovePool.get(id);
+	}
+	public void setValidMovePool(String Turn)
+	{
+		this.validMovePool = new HashMap<String, ArrayList<String>> (0);
+		if(Turn == "White")
+		{
+			makeValidMovePool(whiteId , white, blackId , black, "w1");
+		}
+		else
+		{
+			makeValidMovePool(blackId , black, whiteId , white, "b1");
+			
+		}
+	}
+	public void setCheckedStatus(String Turn)
+	{
+		this.validMovePool = new HashMap<String, ArrayList<String>> (0);
+		if(Turn == "White")
+		{
+			determineCheckedStatus(white, blackId , black, "w1");
+		}
+		else
+		{
+			determineCheckedStatus(black, whiteId , white, "b1");
+			
+		}
+	}
+	public void determineCheckedStatus(HashMap<String, Piece> ally, ArrayList<String> enemyId , HashMap<String, Piece> enemy, String kid)
+	{
+		AttackBoard enemyAttack = new AttackBoard(enemyId, enemy);
+		String KingLocation = ally.get(kid).getLocation();
+		if(enemyAttack.isKingSafeAt(KingLocation))
+		{
+			this.inCheck = false;
+		}
+		else
+		{
+			this.inCheck = true;
+		}
+	}
+	private void makeValidMovePool(ArrayList<String> allyId , HashMap<String, Piece> ally, ArrayList<String> enemyId , HashMap<String, Piece> enemy, String kid)
+	{
+		ArrayList<String> temp;
+		String pid;
+		String possMov;
+		ArrayList<String> pieceMoves;
+		MoveSim sim;
+		for(int x = 0; x < allyId.size(); x++)
+		{
+			temp = new ArrayList<String>();
+			pid = allyId.get(x);
+			pieceMoves = ally.get(pid).getMoves();
+			
+			for(int y = 0; y < pieceMoves.size(); y++)
+			{
+				possMov= pieceMoves.get(y);
+				sim = new MoveSim(ally, allyId ,enemy, enemyId, board, kid, pid, possMov);
+				if(sim.willKingBeSafe())
+				{
+					temp.add(possMov);
+				}
+			}
+			this.validMovePool.put(pid, temp);
+		}
+	}
+	public void setTurnInfo(String Turn)
+	{
+		setCheckedStatus(Turn);
+		setValidMovePool(Turn);
+		setCastleMoves(Turn);
+	}
+	public String getPeiceLocation(String pId)
+	{
+		Piece p = (pId.charAt(0) == 'w')? white.get(pId):black.get(pId);
+		return p.getLocation();
+	}
+	public boolean checkForPeice(String checkLocation)
+	{
+		int row = Integer.parseInt(checkLocation.split("-")[0]) - 1;
+		int col = Integer.parseInt(checkLocation.split("-")[1]) - 1;
+		String pAtLocation = board[row][col].getPeiceID();
+		if(pAtLocation != "")
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public boolean hasRookBeenCaptured(String id)
+	{
+		if(id.charAt(0) == 'w')
+		{
+			return (!whiteId.contains(id));
+		}
+		else
+		{
+			return (!blackId.contains(id));
+		}
+	}
+	public boolean areSpacesEmpty(ArrayList<String> spaces)
+	{
+		String spacePeice;
+		
+		for(int x = 0; x < spaces.size(); x++)
+		{
+			int row = Integer.parseInt(spaces.get(x).split("-")[0]) - 1;
+			int col = Integer.parseInt(spaces.get(x).split("-")[1]) - 1;
+			spacePeice = board[row][col].getPeiceID();
+			if(spacePeice != "")
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	private boolean areSpacesUnderAttack(ArrayList<String> spaces, PieceColor p)
+	{
+		AttackBoard enemyAttackboard = (p == PieceColor.WHITE)? new AttackBoard(blackId, black):new AttackBoard(whiteId, white);
+		
+		for(int x =0; x < spaces.size(); x++)
+		{
+			if(!enemyAttackboard.isKingSafeAt(spaces.get(x)))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	public void setCastleMoves(String color)
+	{
+		this.KingSide = new CastleMove(color, Castle.KING_SIDE);
+		this.QueenSide = new CastleMove(color, Castle.QUEEN_SIDE);
+	}
+	public boolean canKingSideCastle(){
+		String kid =KingSide.getKingId();
+		String rid = KingSide.getRookId();
+		Piece king;
+		Piece rook;
+		boolean isRookCaptured = hasRookBeenCaptured(KingSide.getRookId());
+		boolean areSpacesEmpty = areSpacesEmpty(KingSide.getSpacesToCheck());
+		boolean areSpacesNotSafeForKing;
+		if(!isRookCaptured)
+		{
+			king = (kid.charAt(0) == 'w')? white.get(kid): black.get(kid);
+			rook = (kid.charAt(0) == 'w')? white.get(rid): black.get(rid);
+			areSpacesNotSafeForKing = areSpacesUnderAttack(KingSide.getSpacesKingToches(), king.getColor());
+			if((!areSpacesNotSafeForKing)&& (!rook.hasMoved) && (!king.hasMoved) && areSpacesEmpty)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public boolean canQueenSideCastle(){
+		String kid =KingSide.getKingId();
+		String rid = KingSide.getRookId();
+		Piece king;
+		Piece rook;
+		boolean isRookCaptured = hasRookBeenCaptured(QueenSide.getRookId());
+		boolean areSpacesEmpty = areSpacesEmpty(QueenSide.getSpacesToCheck());
+		boolean areSpacesNotSafeForKing;
+		if(!isRookCaptured)
+		{
+			king = (kid.charAt(0) == 'w')? white.get(kid): black.get(kid);
+			rook = (kid.charAt(0) == 'w')? white.get(rid): black.get(rid);
+			areSpacesNotSafeForKing = areSpacesUnderAttack(QueenSide.getSpacesKingToches(), king.getColor());
+			if((!areSpacesNotSafeForKing)&& (!rook.hasMoved) && (!king.hasMoved) && areSpacesEmpty)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	public String getKingSideKID()
+	{
+		return this.KingSide.getKingId();
+	}
+	public String getKingSideRID()
+	{
+		return this.KingSide.getRookId();
+	}
+	public String getKingSideKMoveTo()
+	{
+		return this.KingSide.getSpaceToMoveKing();
+	}
+	public String getKingSideRMoveTo()
+	{
+		return this.KingSide.getSpaceToMoveRook();
+	}
+	public String getQueenSideKID()
+	{
+		return this.QueenSide.getKingId();
+	}
+	public String getQueenSideRID()
+	{
+		return this.QueenSide.getRookId();
+	}
+	public String getQueenSideKMoveTo()
+	{
+		return this.QueenSide.getSpaceToMoveKing();
+	}
+	public String getQueenSideRMoveTo()
+	{
+		return this.QueenSide.getSpaceToMoveRook();
+	}
+	public String getSpacePeice(String id) 
+	{
+		int row = Integer.parseInt(id.split("-")[0]) - 1;
+		int col = Integer.parseInt(id.split("-")[1]) - 1;
+		
+		return board[row][col].getPeiceID();
+	}
+	
+	public Path getPath(String peiceId, String locationId)
+	{
+		Path path = new Path();
+		String current;
+		PieceType t;
+		if(peiceId.charAt(0) == 'b')
+		{
+			current = this.black.get(peiceId).getLocation();
+			t = this.black.get(peiceId).getType();
+		}
+		else
+		{
+			current = this.white.get(peiceId).getLocation();
+			t = this.white.get(peiceId).getType();
+		}
+		int row = Integer.parseInt(current.split("-")[0]) - 1;
+		int col = Integer.parseInt(current.split("-")[1]) - 1;
+		int lrow = Integer.parseInt(locationId.split("-")[0]) - 1;
+		int lcol = Integer.parseInt(locationId.split("-")[1]) - 1;
+		double pY = row * 80;
+		double pX = col * 80;
+		double lY = lrow * 80;
+		double lX = lcol * 80; 
+		if(t == PieceType.KNIGHT)
+		{
+			path = MakePathKinght(pX, pY, lX, lY);
+		}
+		else
+		{
+			path = MakePath(pX, pY, lX, lY);
+		}
+		return path;
+	}
+	private Path MakePath(double px, double py, double x, double y)
+	{
+		Path path = new Path();
+		path.getElements().add(new MoveTo((px +40), (py+40)));
+		path.getElements().add(new LineTo((x+40), (y+40)));
+		
+		return path;
+	}
+	private Path MakePathKinght(double px, double py, double x, double y)
+	{
+		Path path = new Path();
+		path.getElements().add(new MoveTo((px +40), (py+40)));
+		path.getElements().add(new LineTo((px+40), (y+40)));
+		path.getElements().add(new LineTo((x+40), (y+40)));
+		
+		return path;
+	}
+	public int getNumValidMoves(ArrayList<String> keyList)
+    {
+    	int val = 0;;
+    	
+    	for(int x = 0; x < keyList.size(); x++)
+    	{
+    		val = val + validMovePool.get(keyList.get(x)).size();
+    	}
+    	
+    	return val;
+    }
+	public boolean isMate(String Turn)
+	{
+		if(Turn == "White")
+		{
+			return (getNumValidMoves(whiteId) == 0);
+		}
+		else
+		{
+			return (getNumValidMoves(blackId) == 0);
+		}
+	}
+	public boolean isInCheck(String Turn)
+	{
+		return inCheck;
+	}
+	public void setPieceType(String id, PieceType t) {
+		// TODO Auto-generated method stub
+		if(id.charAt(0) == 'w')
+		{
+			white.get(id).setType(t);
+		}
+		else
+		{
+			black.get(id).setType(t);
+		}
+		
+	}
+	public PieceType getPieceType(String id) {
+		// TODO Auto-generated method stub
+		if(id.charAt(0) == 'w')
+		{
+			return white.get(id).getType();
+		}
+		else
+		{
+			return black.get(id).getType();
+		}
+		
+	}
+}

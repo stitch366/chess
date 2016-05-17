@@ -1,0 +1,16 @@
+package gameFilePareser;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ChessGameData gd = new ChessGameData();
+		gd.OutPutboard();
+		for(int x = 2; x < 10; x++)
+		{
+			gd.setGameFileName("NewGame"+x+".txt");
+			gd.saveData();
+		}
+	}
+
+}

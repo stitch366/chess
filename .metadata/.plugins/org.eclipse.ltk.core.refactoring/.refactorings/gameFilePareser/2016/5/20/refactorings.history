@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;gameFilePareser.GameFinder&apos; to &apos;GameFileHandler&apos;&#x0D;&#x0A;- Original project: &apos;gameFilePareser&apos;&#x0D;&#x0A;- Original element: &apos;gameFilePareser.GameFinder&apos;&#x0D;&#x0A;- Renamed element: &apos;gameFilePareser.GameFileHandler&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;GameFinder&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;gameFilePareser{GameFinder.java[GameFinder" matchStrategy="1" name="GameFileHandler" qualified="false" references="true" similarDeclarations="false" stamp="1463153710192" textual="false" version="1.0"/>
+</session>

@@ -1,0 +1,24 @@
+package general;
+
+public enum MoveSpeed {
+	MED(1000), SLOW(1500), FAST(500);
+	private MoveSpeed(int millisec) {
+		this.setMillisec(millisec);
+	}
+
+	/**
+	 * @return the millisec
+	 */
+	public int getMillisec() {
+		return millisec;
+	}
+
+	/**
+	 * @param millisec the millisec to set
+	 */
+	private void setMillisec(int millisec) {
+		this.millisec = millisec;
+	}
+
+	private int millisec;
+}

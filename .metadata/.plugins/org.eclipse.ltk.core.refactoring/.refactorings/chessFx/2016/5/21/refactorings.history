@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;Main.java&apos; to &apos;chessFx/src/loader&apos;&#x0D;&#x0A;- Original project: &apos;chessFx&apos;&#x0D;&#x0A;- Destination element: &apos;chessFx/src/loader&apos;&#x0D;&#x0A;- Original element: &apos;settings.Main.java&apos;" description="Copy compilation unit" destination="/src&lt;loader" element1="/src&lt;settings{Main.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1463504729736" units="1" version="1.0"/>
+</session>

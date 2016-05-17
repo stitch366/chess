@@ -1,0 +1,16 @@
+package gameFilePareser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+
+
+public class ChessGameData {
+	public String CurrentTurn;
+	public Space[][] board = new Space[8][8];
+	public ArrayList<String> blackId = new ArrayList<String>(0);
+	public ArrayList<String> whiteId = new ArrayList<String>(0);
+	public HashMap<String, Piece> white = new HashMap<String, Piece>(0);
+	public HashMap<String, Piece> black = new HashMap<String, Piece>(0);
+
+}
